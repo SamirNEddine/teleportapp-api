@@ -1,0 +1,1 @@
+module.exports.Skill = require('./type').Skill;
