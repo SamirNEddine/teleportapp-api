@@ -80,8 +80,7 @@ const UserSchema = Schema({
         type: IntegrationSchema
     }],
     skills: {
-        type: Schema.Types.ObjectID,
-        required: true
+        type: Schema.Types.ObjectID
     },
     availability: [{
         type: TimeSlotSchema
@@ -97,7 +96,6 @@ UserSchema.pre('save', async  function(next) {
         //Check if existing
         const emailExist = await User.findOne({email: this.email});
         if (emailExist) throw (new Error("Email already exist!"));
-        this.password = await hashPassword(this.password);
     }
     next();
 });

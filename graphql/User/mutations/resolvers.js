@@ -1,5 +1,8 @@
 const User = require('../../../model/User');
 const nameFromEmail = require('../../../utils/nameFromEmail');
+const randomAccessCode = require('../../../utils/randomAccessCode');
+const { redisHmsetAsync } = require('../../../utils/redis');
+const { sendTemporaryAccessCode } = require('../../../utils/sendgrid');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
     try{
@@ -15,6 +18,10 @@ module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
             return "Enter password";
         }else {
             //Password less auth. Send a temporary code
+            const randomCode = randomAccessCode();
+            await redisHmsetAsync(emailAddress, {code: randomCode, timestamp: Date.now()});
+            await sendTemporaryAccessCode(emailAddress, randomCode);
+            return "Code Sent";
         }
     }catch (error) {
         console.debug(error);

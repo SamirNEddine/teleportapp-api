@@ -1,7 +1,6 @@
-const graphql = require('graphql');
-const {GraphQLUser, inputFields} = require('../type');
+const {GraphQLString} = require('graphql');
+const {inputFields} = require('../type');
 const {signInWithEmailResolver} = require('./resolvers');
-const {GraphQLString} = graphql;
 
 /** Mutations definitions **/
 const signInWithEmail = {

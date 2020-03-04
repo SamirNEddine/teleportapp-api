@@ -46,7 +46,7 @@ const {nestedUserSkillsResolver} = require('./nestedResolvers');
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
-module.exports.GraphQLUser = new GraphQLObjectType({
+module.exports.UserType = new GraphQLObjectType({
     name: 'User',
     fields: () => ({
         id: {
@@ -92,6 +92,6 @@ module.exports.GraphQLUser = new GraphQLObjectType({
 /** Input fields for queries and mutations **/
 module.exports.inputFields = {
     signInWithEmail: {
-        emailAddress: {type: NonNull(String)}
+        emailAddress: {type: NonNull(GraphQLString)}
     }
 };
