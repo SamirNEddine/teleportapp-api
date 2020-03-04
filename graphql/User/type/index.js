@@ -5,6 +5,7 @@ const {
     GraphQLObjectType,
     GraphQLID,
     GraphQLString,
+    GraphQLInt,
     GraphQLList
 } = graphql;
 const { nestedUserSkillsResolver } = require('./nestedResolvers');
@@ -14,13 +15,13 @@ const TimeSlot = new GraphQLObjectType({
     name: 'TimeSlot',
     fields: () => ({
         startTime: {
-            type: NonNull(String)
+            type: NonNull(GraphQLString)
         },
         endTime: {
-            type: NonNull(String)
+            type: NonNull(GraphQLString)
         },
         availabilityLevel: {
-            type: NonNull(String)
+            type: NonNull(GraphQLInt)
         }
     })
 });
@@ -30,13 +31,13 @@ const UserPreferences = new GraphQLObjectType({
     name: 'Preferences',
     fields: () => ({
         startWorkTime: {
-            type: NonNull(String)
+            type: NonNull(GraphQLString)
         },
         endWorkTime: {
-            type: NonNull(String)
+            type: NonNull(GraphQLString)
         },
         dailySetupTime: {
-            type: NonNull(String)
+            type: NonNull(GraphQLString)
         }
     })
 });
