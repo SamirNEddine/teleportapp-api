@@ -1,6 +1,6 @@
 const graphql = require('graphql');
-const { NonNull } = require('../../../utils/graphql');
-const { Skill } = require('../../Skill');
+const {NonNull} = require('../../../utils/graphql');
+const {Skill} = require('../../Skill');
 const {
     GraphQLObjectType,
     GraphQLID,
@@ -42,11 +42,11 @@ const UserPreferences = new GraphQLObjectType({
 });
 
 /** Nested resolvers **/
-const { nestedUserSkillsResolver } = require('./nestedResolvers');
+const {nestedUserSkillsResolver} = require('./nestedResolvers');
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
-module.exports.User = new GraphQLObjectType({
+module.exports.GraphQLUser = new GraphQLObjectType({
     name: 'User',
     fields: () => ({
         id: {
@@ -56,7 +56,7 @@ module.exports.User = new GraphQLObjectType({
             type: NonNull(GraphQLString)
         },
         lastName: {
-            type: NonNull(GraphQLString)
+            type: GraphQLString
         },
         emailAddress: {
             type: NonNull(GraphQLString)
@@ -79,10 +79,19 @@ module.exports.User = new GraphQLObjectType({
         },
         preferences: {
             type: UserPreferences
+        },
+        accessToken: {
+            type: GraphQLString
+        },
+        refreshToken: {
+            type: GraphQLString
         }
     })
 });
 
 /** Input fields for queries and mutations **/
 module.exports.inputFields = {
+    signInWithEmail: {
+        emailAddress: {type: NonNull(String)}
+    }
 };

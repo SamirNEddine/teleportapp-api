@@ -1,1 +1,1 @@
-module.exports.User = require('./type').User;
+module.exports.GraphQLUser = require('./type').GraphQLUser;
