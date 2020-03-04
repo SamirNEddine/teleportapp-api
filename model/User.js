@@ -23,11 +23,11 @@ const IntegrationSchema = Schema ({
 //TimeSlotSchema to be used in UserSchema
 const TimeSlotSchema = Schema ({
     startTime: {
-        type: Number,
+        type: String,
         required: true
     },
     endTime: {
-        type: Number,
+        type: String,
         required: true
     },
     availabilityLevel: {
@@ -40,13 +40,13 @@ const TimeSlotSchema = Schema ({
 //UserPreferences to be used in UserSchema
 const UserPreferences = Schema ({
     startWorkTime: {
-        type: Number
+        type: String
     },
     endWorkTime: {
-        type: Number
+        type: String
     },
     dailySetupTime: {
-        type: Number
+        type: String
     },
 });
 
