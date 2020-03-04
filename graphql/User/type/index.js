@@ -8,7 +8,6 @@ const {
     GraphQLInt,
     GraphQLList
 } = graphql;
-const { nestedUserSkillsResolver } = require('./nestedResolvers');
 
 /** Nested TimeSlot type **/
 const TimeSlot = new GraphQLObjectType({
@@ -43,6 +42,7 @@ const UserPreferences = new GraphQLObjectType({
 });
 
 /** Nested resolvers **/
+const { nestedUserSkillsResolver } = require('./nestedResolvers');
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
