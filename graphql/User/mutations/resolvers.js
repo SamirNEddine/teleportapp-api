@@ -61,8 +61,7 @@ module.exports.signInWithSlackResolver = async function (_, {code}){
 module.exports.refreshAccessTokenResolver = async function (_, {refreshToken}) {
     try {
         const payload = await getPayloadFromJWTRefreshToken(refreshToken);
-        const user = await
-            User.findById(payload.userId);
+        const user = await User.findById(payload.userId);
         user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
         user.refreshToken = getJWTRefreshTokenForUser(user.id);
         return user;
