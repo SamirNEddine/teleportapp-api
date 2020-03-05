@@ -1,7 +1,7 @@
 const User = require('../../../model/User');
 const nameFromEmail = require('../../../utils/nameFromEmail');
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
-const { generateTemporaryAccessCode, verifyTemporaryAccessCode } = require('../../../utils/authentication');
+const { generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser } = require('../../../utils/authentication');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
     try{
@@ -31,7 +31,8 @@ module.exports.authWithTemporaryCodeResolver = async function (_, {emailAddress,
     try {
         await verifyTemporaryAccessCode(emailAddress, code);
         const user = await User.findOne({emailAddress});
-
+        user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
+        user.refreshToken = getJWTRefreshTokenForUser(user.id);
         return user;
     }catch (error) {
         console.debug(error);

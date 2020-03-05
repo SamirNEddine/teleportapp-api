@@ -9,7 +9,7 @@ const signInWithEmail = {
     resolve: signInWithEmailResolver
 };
 const authWithTemporaryCode = {
-    type: GraphQLString,
+    type: UserType,
     args: inputFields.authWithTemporaryCode,
     resolve: authWithTemporaryCodeResolver
 };

@@ -1,1 +1,1 @@
-module.exports.Skill = require('./type').Skill;
+module.exports.SkillType = require('./type').SkillType;

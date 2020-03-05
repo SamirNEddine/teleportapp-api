@@ -24,7 +24,7 @@ module.exports.authenticatedResolver = function (resolver) {
 const generateHashForText = module.exports.generateHashForText = async function (text) {
     return argon2.hash(text, argon2.argon2id);
 };
-module.exports.verifyHashForText = async function (hash, text) {
+const verifyHashForText = module.exports.verifyHashForText = async function (hash, text) {
     return argon2.verify(hash, text);
 };
 
@@ -34,7 +34,7 @@ module.exports.generateTemporaryAccessCode = async function (emailAddress) {
     const randomCode = crypto.randomBytes(20).toString('base64').slice(0, 30);
     //Store a hash of the code in redis
     const codeHash = await generateHashForText(randomCode);
-    await redisHmsetAsync(emailAddress, {code: codeHash, timestamp: Date.now()});
+    await redisHmsetAsync(emailAddress, {code: codeHash, timestamp: Date.now()/1000});
     return randomCode;
 };
 module.exports.verifyTemporaryAccessCode = async function (emailAddress, code) {
@@ -42,7 +42,7 @@ module.exports.verifyTemporaryAccessCode = async function (emailAddress, code) {
     if (!hash){
         throw ApiError.INVALID_ACCESS_CODE_ERROR();
     }
-    if(Date.now() - parseInt(timestamp) > process.env.TEMP_CODE_VALIDTY_IN_SECONDS){
+    if(Date.now()/1000 - parseInt(timestamp) > process.env.TEMP_CODE_VALIDTY_IN_SECONDS){
         throw ApiError.EXPIRED_ACCESS_CODE_ERROR();
     }
     if(! await verifyHashForText(hash, code)) {
@@ -50,7 +50,7 @@ module.exports.verifyTemporaryAccessCode = async function (emailAddress, code) {
     }
 };
 
-/** JWT **/
+/** JWT Access Token **/
 class JWTUser {
     constructor(userId, email){
         this.id = userId;
@@ -64,10 +64,18 @@ class JWTUser {
     }
 }
 module.exports.JWTUser = JWTUser;
-module.exports.getJWTForUser = async function (userId, email) {
+module.exports.getJWTAccessTokenForUser = async function (userId, email) {
     const jwtUser = new JWTUser(userId, email);
-    return jwt.sign({user: jwtUser.toPlainObject()}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRATION});
+    return jwt.sign({user: jwtUser.toPlainObject()}, process.env.JWT_ACCESS_TOKEN_SECRET, {expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION});
 };
-module.exports.getPayloadFromJWT = async function (token) {
-    return jwt.verify(token, process.env.JWT_SECRET);
+module.exports.getPayloadFromJWTAccessToken = async function (token) {
+    return jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+};
+
+/** JWT Refresh Token **/
+module.exports.getJWTRefreshTokenForUser = async function (userId) {
+    return jwt.sign({userId}, process.env.JWT_REFRESH_TOKEN_SECRET, {expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION});
+};
+module.exports.getPayloadFromJWTRefreshToken = async function (token) {
+    return jwt.verify(token, process.env.JWT_REFRESH_TOKEN_SECRET);
 };

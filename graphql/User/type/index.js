@@ -1,6 +1,6 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
-const {Skill} = require('../../Skill');
+const {SkillType} = require('../../Skill');
 const {
     GraphQLObjectType,
     GraphQLID,
@@ -68,7 +68,7 @@ module.exports.UserType = new GraphQLObjectType({
             type: GraphQLString
         },
         skills: {
-            type: GraphQLList(Skill),
+            type: GraphQLList(SkillType),
             resolve: nestedUserSkillsResolver
         },
         availability: {
