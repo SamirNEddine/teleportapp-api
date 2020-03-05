@@ -99,6 +99,9 @@ module.exports.inputFields = {
     signInWithSlack: {
         code: {type: NonNull(GraphQLString)}
     },
+    refreshAccessToken: {
+        refreshToken: {type: NonNull(GraphQLString)}
+    },
     updateUserProfile: {
         firstName: {type: NonNull(GraphQLString)},
         lastName: {type: NonNull(GraphQLString)}

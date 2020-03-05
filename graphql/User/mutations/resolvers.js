@@ -1,7 +1,7 @@
 const User = require('../../../model/User');
 const nameFromEmail = require('../../../utils/nameFromEmail');
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
-const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser} = require('../../../utils/authentication');
+const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack} = require ('../../../utils/slack');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
@@ -52,6 +52,19 @@ module.exports.signInWithSlackResolver = async function (_, {code}){
         user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
         user.refreshToken = getJWTRefreshTokenForUser(user.id);
         await user.save();
+        return user;
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.refreshAccessTokenResolver = async function (_, {refreshToken}) {
+    try {
+        const payload = await getPayloadFromJWTRefreshToken(refreshToken);
+        const user = await
+            User.findById(payload.userId);
+        user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
+        user.refreshToken = getJWTRefreshTokenForUser(user.id);
         return user;
     }catch (error) {
         console.debug(error);
