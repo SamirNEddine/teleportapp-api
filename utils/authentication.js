@@ -1,6 +1,7 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const ApiError = require('./apiError');
+const {redisHmsetAsync, redisHmgetAsync} = require('./redis');
 
 /** Constants **/
 const AUTH_MODE_PREFIX = module.exports.AUTH_MODE_PREFIX = 'Bearer ';
@@ -18,12 +19,34 @@ module.exports.authenticatedResolver = function (resolver) {
     }
 };
 
-/** Password hashing and verification **/
-module.exports.hashPassword = async function (password) {
-    return argon2.hash(password, argon2.argon2id);
+/** Text hashing and verification **/
+module.exports.generateHashForText = async function (text) {
+    return argon2.hash(text, argon2.argon2id);
 };
-module.exports.verifyPassword = async function (password, hash) {
-    return argon2.verify(hash, password);
+module.exports.verifyHashForText = async function (hash, text) {
+    return argon2.verify(hash, text);
+};
+
+/** Temporary access code **/
+module.exports.generateTemporaryAccessCode = async function (emailAddress) {
+    if(!emailAddress) throw ApiError.INTERNAL_SERVER_ERROR();
+    const randomCode = Crypto.randomBytes(20).toString('base64').slice(0, 30);
+    //Store a hash of the code in redis
+    const codeHash = await generateHashForText(randomCode);
+    await redisHmsetAsync(emailAddress, {code: codeHash, timestamp: Date.now()});
+    return randomCode;
+};
+module.exports.verifyTemporaryAccessCode = async function (emailAddress, code) {
+    const [hash, timestamp] = await redisHmgetAsync(emailAddress, 'code', 'timestamp');
+    if (!hash){
+        throw ApiError.INVALID_ACCESS_CODE_ERROR();
+    }
+    if(Date.now() - parseInt(timestamp) > process.env.TEMP_CODE_VALIDTY_IN_SECONDS){
+        throw ApiError.EXPIRED_ACCESS_CODE_ERROR();
+    }
+    if(! await verifyHashForText(hash, code)) {
+        throw ApiError.INVALID_ACCESS_CODE_ERROR();
+    }
 };
 
 /** JWT **/

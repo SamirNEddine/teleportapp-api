@@ -61,9 +61,6 @@ module.exports.UserType = new GraphQLObjectType({
         emailAddress: {
             type: NonNull(GraphQLString)
         },
-        password: {
-            type: GraphQLString
-        },
         profilePictureURL: {
             type: GraphQLString
         },
@@ -91,7 +88,12 @@ module.exports.UserType = new GraphQLObjectType({
 
 /** Input fields for queries and mutations **/
 module.exports.inputFields = {
+    //Mutations
     signInWithEmail: {
         emailAddress: {type: NonNull(GraphQLString)}
+    },
+    authWithTemporaryCode: {
+        emailAddress: {type: NonNull(GraphQLString)},
+        code: {type: NonNull(GraphQLString)}
     }
 };

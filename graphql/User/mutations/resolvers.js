@@ -1,8 +1,7 @@
 const User = require('../../../model/User');
 const nameFromEmail = require('../../../utils/nameFromEmail');
-const randomAccessCode = require('../../../utils/randomAccessCode');
-const { redisHmsetAsync } = require('../../../utils/redis');
-const { sendTemporaryAccessCode } = require('../../../utils/sendgrid');
+const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
+const { generateTemporaryAccessCode, verifyTemporaryAccessCode } = require('../../../utils/authentication');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
     try{
@@ -18,11 +17,22 @@ module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
             return "Enter password";
         }else {
             //Password less auth. Send a temporary code
-            const randomCode = randomAccessCode();
-            await redisHmsetAsync(emailAddress, {code: randomCode, timestamp: Date.now()});
-            await sendTemporaryAccessCode(emailAddress, randomCode);
+            const code = await generateTemporaryAccessCode(emailAddress);
+            await sendTemporaryAccessCode(emailAddress, code);
             return "Code Sent";
         }
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+
+module.exports.authWithTemporaryCodeResolver = async function (_, {emailAddress, code}) {
+    try {
+        await verifyTemporaryAccessCode(emailAddress, code);
+        const user = await User.findOne({emailAddress});
+
+        return user;
     }catch (error) {
         console.debug(error);
         throw(error);

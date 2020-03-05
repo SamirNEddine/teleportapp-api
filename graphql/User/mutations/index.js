@@ -1,6 +1,6 @@
 const {GraphQLString} = require('graphql');
-const {inputFields} = require('../type');
-const {signInWithEmailResolver} = require('./resolvers');
+const {UserType, inputFields} = require('../type');
+const {signInWithEmailResolver,authWithTemporaryCodeResolver} = require('./resolvers');
 
 /** Mutations definitions **/
 const signInWithEmail = {
@@ -8,8 +8,14 @@ const signInWithEmail = {
     args: inputFields.signInWithEmail,
     resolve: signInWithEmailResolver
 };
+const authWithTemporaryCode = {
+    type: GraphQLString,
+    args: inputFields.authWithTemporaryCode,
+    resolve: authWithTemporaryCodeResolver
+};
 
 /** Exports **/
 module.exports = {
-    signInWithEmail
+    signInWithEmail,
+    authWithTemporaryCode
 };
