@@ -1,7 +1,7 @@
 const User = require('../../../model/User');
 const nameFromEmail = require('../../../utils/nameFromEmail');
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
-const { generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser } = require('../../../utils/authentication');
+const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser} = require('../../../utils/authentication');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
     try{
@@ -34,6 +34,21 @@ module.exports.authWithTemporaryCodeResolver = async function (_, {emailAddress,
         user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
         user.refreshToken = getJWTRefreshTokenForUser(user.id);
         return user;
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.updateUserProfileResolver = async function (_, {firstName, lastName}, {jwtUser}) {
+    try {
+        const user = await User.findOneAndUpdate(
+            {_id: jwtUser.id},
+            {firstName, lastName},
+            {new: true});
+        if(!user) {
+        }else{
+            return user;
+        }
     }catch (error) {
         console.debug(error);
         throw(error);

@@ -10,8 +10,8 @@ const AUTH_MODE_PREFIX = module.exports.AUTH_MODE_PREFIX = 'Bearer ';
 /** GraphQL authentication protection through a higher order function on resolvers **/
 module.exports.authenticatedResolver = function (resolver) {
     return function (parent, args, context, info) {
-        let {user, error} = context;
-        if (!user || error){
+        let {jwtUser, error} = context;
+        if (!jwtUser || error){
             error = error ? error : ApiError.INTERNAL_SERVER_ERROR();
             throw(error);
         }else{

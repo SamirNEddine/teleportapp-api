@@ -1,6 +1,7 @@
 const {GraphQLString} = require('graphql');
 const {UserType, inputFields} = require('../type');
-const {signInWithEmailResolver,authWithTemporaryCodeResolver} = require('./resolvers');
+const {authenticatedResolver} = require('../../../utils/authentication');
+const {signInWithEmailResolver,authWithTemporaryCodeResolver,updateUserProfileResolver} = require('./resolvers');
 
 /** Mutations definitions **/
 const signInWithEmail = {
@@ -14,8 +15,15 @@ const authWithTemporaryCode = {
     resolve: authWithTemporaryCodeResolver
 };
 
+const updateUserProfile = {
+    type: UserType,
+    args: inputFields.updateUserProfile,
+    resolve: authenticatedResolver(updateUserProfileResolver)
+};
+
 /** Exports **/
 module.exports = {
     signInWithEmail,
-    authWithTemporaryCode
+    authWithTemporaryCode,
+    updateUserProfile
 };

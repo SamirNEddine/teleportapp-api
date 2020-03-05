@@ -95,5 +95,9 @@ module.exports.inputFields = {
     authWithTemporaryCode: {
         emailAddress: {type: NonNull(GraphQLString)},
         code: {type: NonNull(GraphQLString)}
+    },
+    updateUserProfile: {
+        firstName: {type: NonNull(GraphQLString)},
+        lastName: {type: NonNull(GraphQLString)}
     }
 };

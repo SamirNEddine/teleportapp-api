@@ -6,7 +6,7 @@ async function verifyToken(authorization, req, next){
     if (token){
         try{
             const payload = await getPayloadFromJWTAccessToken(token);
-            req.user = JWTUser.JWTUserFromPayload(payload);
+            req.jwtUser = JWTUser.JWTUserFromPayload(payload);
             req.error = null;
         }catch(error){
             console.error(error);

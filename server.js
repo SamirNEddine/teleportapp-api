@@ -22,7 +22,7 @@ app.use(
     graphqlHTTP( req => ({
         schema,
         context: {
-            user: req.user,
+            jwtUser: req.jwtUser,
             error: req.error
         },
         graphiql: (process.env.GRAPHIQLE_ENABLED === 1)
