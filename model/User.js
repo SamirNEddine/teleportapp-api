@@ -106,6 +106,17 @@ const User = new mongoose.model('user', UserSchema);
 User.prototype.verifyPassword = async function(password) {
     return await verifyPassword(password, this.password);
 };
+User.prototype.getIntegrationData = function(name){
+    return this.integrations.find(integration => integration.name === name);
+};
+User.prototype.setIntegrationData = function(name, data){
+    if(!this.integrations){
+        this.integrations = [];
+    }
+    let index = this.integrations.findIndex(integration => integration.name === name);
+    if(index < 0) index = this.integrations.length;
+    this.integrations[index] = {name, data};
+};
 
 /** Export **/
 module.exports = User;
