@@ -1,5 +1,6 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const ApiError = require('./apiError');
 const {redisHmsetAsync, redisHmgetAsync} = require('./redis');
 
@@ -20,7 +21,7 @@ module.exports.authenticatedResolver = function (resolver) {
 };
 
 /** Text hashing and verification **/
-module.exports.generateHashForText = async function (text) {
+const generateHashForText = module.exports.generateHashForText = async function (text) {
     return argon2.hash(text, argon2.argon2id);
 };
 module.exports.verifyHashForText = async function (hash, text) {
@@ -30,7 +31,7 @@ module.exports.verifyHashForText = async function (hash, text) {
 /** Temporary access code **/
 module.exports.generateTemporaryAccessCode = async function (emailAddress) {
     if(!emailAddress) throw ApiError.INTERNAL_SERVER_ERROR();
-    const randomCode = Crypto.randomBytes(20).toString('base64').slice(0, 30);
+    const randomCode = crypto.randomBytes(20).toString('base64').slice(0, 30);
     //Store a hash of the code in redis
     const codeHash = await generateHashForText(randomCode);
     await redisHmsetAsync(emailAddress, {code: codeHash, timestamp: Date.now()});
