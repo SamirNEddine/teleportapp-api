@@ -1,6 +1,6 @@
 const graphql = require('graphql');
-const { NonNull } = require('../../../utils/graphql');
-const { Skill } = require('../../Skill');
+const {NonNull} = require('../../../utils/graphql');
+const {SkillType} = require('../../Skill');
 const {
     GraphQLObjectType,
     GraphQLID,
@@ -42,11 +42,11 @@ const UserPreferences = new GraphQLObjectType({
 });
 
 /** Nested resolvers **/
-const { nestedUserSkillsResolver } = require('./nestedResolvers');
+const {nestedUserSkillsResolver} = require('./nestedResolvers');
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
-module.exports.User = new GraphQLObjectType({
+module.exports.UserType = new GraphQLObjectType({
     name: 'User',
     fields: () => ({
         id: {
@@ -56,13 +56,10 @@ module.exports.User = new GraphQLObjectType({
             type: NonNull(GraphQLString)
         },
         lastName: {
-            type: NonNull(GraphQLString)
+            type: GraphQLString
         },
         emailAddress: {
             type: NonNull(GraphQLString)
-        },
-        password: {
-            type: GraphQLString
         },
         profilePictureURL: {
             type: GraphQLString
@@ -71,7 +68,7 @@ module.exports.User = new GraphQLObjectType({
             type: GraphQLString
         },
         skills: {
-            type: GraphQLList(Skill),
+            type: GraphQLList(SkillType),
             resolve: nestedUserSkillsResolver
         },
         availability: {
@@ -79,10 +76,28 @@ module.exports.User = new GraphQLObjectType({
         },
         preferences: {
             type: UserPreferences
+        },
+        accessToken: {
+            type: GraphQLString
+        },
+        refreshToken: {
+            type: GraphQLString
         }
     })
 });
 
 /** Input fields for queries and mutations **/
 module.exports.inputFields = {
+    //Mutations
+    signInWithEmail: {
+        emailAddress: {type: NonNull(GraphQLString)}
+    },
+    authWithTemporaryCode: {
+        emailAddress: {type: NonNull(GraphQLString)},
+        code: {type: NonNull(GraphQLString)}
+    },
+    updateUserProfile: {
+        firstName: {type: NonNull(GraphQLString)},
+        lastName: {type: NonNull(GraphQLString)}
+    }
 };

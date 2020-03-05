@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const { getJWTForUser, hashPassword, verifyPassword } = require('../utils/authentication');
+const {verifyPassword} = require('../utils/authentication');
 
 //NB: Time here is a string representation  of the time in 24 hours format with a leading digit. Example: 8:30 a.m. => 0830
 
@@ -79,10 +79,9 @@ const UserSchema = Schema({
     integrations: [{
         type: IntegrationSchema
     }],
-    skills: {
-        type: Schema.Types.ObjectID,
-        required: true
-    },
+    skills: [{
+        type: Schema.Types.ObjectID
+    }],
     availability: [{
         type: TimeSlotSchema
     }],
@@ -97,7 +96,6 @@ UserSchema.pre('save', async  function(next) {
         //Check if existing
         const emailExist = await User.findOne({email: this.email});
         if (emailExist) throw (new Error("Email already exist!"));
-        this.password = await hashPassword(this.password);
     }
     next();
 });
@@ -105,10 +103,6 @@ UserSchema.pre('save', async  function(next) {
 /** Extend User model with helpers methods **/
 const User = new mongoose.model('user', UserSchema);
 
-/** JWT **/
-User.prototype.jwt = async function() {
-    return await getJWTForUser(this._id, this.email);
-};
 User.prototype.verifyPassword = async function(password) {
     return await verifyPassword(password, this.password);
 };

@@ -7,8 +7,8 @@ ADD . .
 RUN apk --no-cache --virtual build-dependencies add \
     python \
     make \
+    yarn \
     g++ &&\
-    npm install -g -s --no-progress yarn && \
     yarn && \
     yarn cache clean
 

@@ -8,10 +8,14 @@ const {
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
-module.exports.Skill = new GraphQLObjectType({
+module.exports.SkillType = new GraphQLObjectType({
     name: 'Skill',
     fields: () => ({
-        id: NonNull(GraphQLID),
-        name: NonNull(GraphQLString)
+        id: {
+            type: NonNull(GraphQLID)
+        },
+        name: {
+            type: NonNull(GraphQLString)
+        }
     })
 });

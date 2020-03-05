@@ -6,11 +6,13 @@ const {
 } = graphql;
 
 /** Types **/
+const User = require('./User');
 
 /** Queries **/
 const RootQuery = new GraphQLObjectType({
     name: "Query",
     fields: {
+        ...User.queries
     }
 });
 
@@ -18,6 +20,7 @@ const RootQuery = new GraphQLObjectType({
 const RootMutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
+        ...User.mutations
     }
 });
 

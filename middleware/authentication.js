@@ -1,12 +1,12 @@
 const ApiError = require('../utils/apiError');
-const { AUTH_MODE_PREFIX, getPayloadFromJWT, JWTUser } = require('../utils/authentication');
+const { AUTH_MODE_PREFIX, getPayloadFromJWTAccessToken, JWTUser } = require('../utils/authentication');
 
 async function verifyToken(authorization, req, next){
     const token = authorization && authorization.startsWith(AUTH_MODE_PREFIX) ? authorization.slice(AUTH_MODE_PREFIX.length, authorization.length) : null;
     if (token){
         try{
-            const payload = await getPayloadFromJWT(token);
-            req.user = JWTUser.JWTUserFromPayload(payload);
+            const payload = await getPayloadFromJWTAccessToken(token);
+            req.jwtUser = JWTUser.JWTUserFromPayload(payload);
             req.error = null;
         }catch(error){
             console.error(error);
