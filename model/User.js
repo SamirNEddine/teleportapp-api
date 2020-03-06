@@ -94,7 +94,7 @@ const UserSchema = Schema({
 UserSchema.pre('save', async  function(next) {
     if (this.isNew){
         //Check if existing
-        const emailExist = await User.findOne({email: this.email});
+        const emailExist = await User.findOne({emailAddress: this.email});
         if (emailExist) throw (new Error("Email already exist!"));
     }
     next();
