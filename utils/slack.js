@@ -38,8 +38,8 @@ module.exports.updateUserStatus = async function (integrationData, availabilityL
         },
         data: {
             profile: {
-                status_text: "Testing Slack Integration",
-                status_emoji: ":slack:",
+                status_text: "Testing Google Calendar Integration",
+                status_emoji: ":date:",
                 status_expiration: Date.now()/1000 + 3600
             }
         }
