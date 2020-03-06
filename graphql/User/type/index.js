@@ -105,5 +105,8 @@ module.exports.inputFields = {
     updateUserProfile: {
         firstName: {type: NonNull(GraphQLString)},
         lastName: {type: NonNull(GraphQLString)}
+    },
+    updateAvailabilityLevel: {
+        level: {type: NonNull(GraphQLInt)}
     }
 };

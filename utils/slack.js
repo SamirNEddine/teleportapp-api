@@ -17,8 +17,7 @@ module.exports.signInWithSlack = async function (code) {
     }
     return response.data;
 };
-
-module.exports.fetchUserInfoFromSlack = async function(integrationData) {
+module.exports.fetchUserInfoFromSlack = async function (integrationData) {
     const request = {
         method: "GET",
         url: `${slackAPIBaseURL}/users.profile.get?token=${integrationData.access_token}`
@@ -29,4 +28,24 @@ module.exports.fetchUserInfoFromSlack = async function(integrationData) {
     }
     const {first_name, last_name, email, phone} = response.data.profile;
     return {firstName: first_name, lastName: last_name, emailAddress: email, phoneNumber: phone};
+};
+module.exports.updateUserStatus = async function (integrationData, availabilityLevel) {
+    const request = {
+        method: "POST",
+        url: `${slackAPIBaseURL}/users.profile.set`,
+        headers: {
+            'Authorization': `Bearer ${integrationData.access_token}`
+        },
+        data: {
+            profile: {
+                status_text: "Testing Slack Integration",
+                status_emoji: ":slack:",
+                status_expiration: Date.now()/1000 + 3600
+            }
+        }
+    };
+    const response = await axios(request);
+    if(!response.data.ok){
+        throw ApiError.BAD_REQUEST_ERROR(`Bad request: ${response.data.error}`);
+    }
 };
