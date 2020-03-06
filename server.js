@@ -1,9 +1,10 @@
 require('dotenv').config();
-const { connectToDb } = require('./utils/mongoose');
+const {connectToDb} = require('./utils/mongoose');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const { getGraphqlCORS, getStatusCORS } = require('./utils/cors');
-const { httpRequestAuth } = require('./middleware/authentication');
+const {getGraphqlCORS, getStatusCORS} = require('./utils/cors');
+const {httpRequestAuth} = require('./middleware/authentication');
+const {httpTimezoneCheck} = require('./middleware/timezone');
 
 /** Connect to the database **/
 connectToDb();
@@ -19,10 +20,12 @@ app.use(
     '/graphql',
     getGraphqlCORS(),
     httpRequestAuth,
+    httpTimezoneCheck,
     graphqlHTTP( req => ({
         schema,
         context: {
             jwtUser: req.jwtUser,
+            timezoneOffset: req.timezoneOffset,
             error: req.error
         },
         graphiql: (process.env.GRAPHIQLE_ENABLED === 1)
