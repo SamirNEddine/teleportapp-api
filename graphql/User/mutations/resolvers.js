@@ -3,6 +3,7 @@ const nameFromEmail = require('../../../utils/nameFromEmail');
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
+const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
     try{
@@ -15,12 +16,12 @@ module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
         }
         if(user.password) {
             //Auth with password
-            return "Enter password";
+            return 'Enter password';
         }else {
             //Password less auth. Send a temporary code
             const code = await generateTemporaryAccessCode(emailAddress);
             await sendTemporaryAccessCode(emailAddress, code);
-            return "Code Sent";
+            return 'Code Sent';
         }
     }catch (error) {
         console.debug(error);
@@ -48,7 +49,7 @@ module.exports.signInWithSlackResolver = async function (_, {code}){
         if(!user){
             user = User(fetchedUserInfo);
         }
-        user.setIntegrationData("slack", slackIntegrationData);
+        user.setIntegrationData('slack', slackIntegrationData);
         user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
         user.refreshToken = getJWTRefreshTokenForUser(user.id);
         await user.save();
@@ -88,9 +89,27 @@ module.exports.updateUserProfileResolver = async function (_, {firstName, lastNa
 module.exports.updateAvailabilityLevelResolver = async function (_, {level}, {jwtUser}) {
     try {
         const user = await User.findById(jwtUser.id);
-        const slackIntegrationData = user.getIntegrationData("slack");
+        const slackIntegrationData = user.getIntegrationData('slack');
         await updateUserStatus(slackIntegrationData, level);
-        return "OK";
+        const googleIntegrationData = user.getIntegrationData('google');
+        await createCalendarEvent(googleIntegrationData);
+        return 'OK';
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code}, {jwtUser}) {
+    try {
+        const user = await User.findById(jwtUser.id);
+        if(!user) {
+
+        }else{
+            const googleIntegrationData = await authorizeCalendarAccess(code);
+            user.setIntegrationData('google', googleIntegrationData);
+            await user.save();
+        }
+        return 'OK';
     }catch (error) {
         console.debug(error);
         throw(error);
