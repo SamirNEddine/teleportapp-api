@@ -107,7 +107,12 @@ User.prototype.verifyPassword = async function(password) {
     return await verifyPassword(password, this.password);
 };
 User.prototype.getIntegrationData = function(name){
-    return this.integrations.find(integration => integration.name === name);
+    const entry = this.integrations.find(integration => integration.name === name);
+    if(entry){
+        return Object.fromEntries(entry.data);
+    }else{
+        return undefined;
+    }
 };
 User.prototype.setIntegrationData = function(name, data){
     if(!this.integrations){

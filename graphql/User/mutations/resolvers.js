@@ -2,7 +2,7 @@ const User = require('../../../model/User');
 const nameFromEmail = require('../../../utils/nameFromEmail');
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
-const {signInWithSlack, fetchUserInfoFromSlack} = require ('../../../utils/slack');
+const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
     try{
@@ -80,6 +80,17 @@ module.exports.updateUserProfileResolver = async function (_, {firstName, lastNa
         }else{
             return user;
         }
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.updateAvailabilityLevelResolver = async function (_, {level}, {jwtUser}) {
+    try {
+        const user = await User.findById(jwtUser.id);
+        const slackIntegrationData = user.getIntegrationData("slack");
+        await updateUserStatus(slackIntegrationData, level);
+        return "OK";
     }catch (error) {
         console.debug(error);
         throw(error);
