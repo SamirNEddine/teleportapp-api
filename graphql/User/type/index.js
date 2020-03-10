@@ -14,13 +14,19 @@ const TimeSlot = new GraphQLObjectType({
     name: 'TimeSlot',
     fields: () => ({
         startTime: {
-            type: NonNull(GraphQLString)
+            type: NonNull(GraphQLInt)
         },
         endTime: {
+            type: NonNull(GraphQLInt)
+        },
+        status: {
             type: NonNull(GraphQLString)
         },
-        availabilityLevel: {
-            type: NonNull(GraphQLInt)
+        communicationMode: {
+            type: NonNull(GraphQLString)
+        },
+        interactivityLevel: {
+            type: NonNull(GraphQLString)
         }
     })
 });
@@ -42,7 +48,7 @@ const UserPreferences = new GraphQLObjectType({
 });
 
 /** Nested resolvers **/
-const {nestedUserSkillsResolver} = require('./nestedResolvers');
+const {nestedUserSkillsResolver, nestedAvailabilityResolver} = require('./nestedResolvers');
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
@@ -72,7 +78,9 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedUserSkillsResolver
         },
         availability: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlot),
+            args: {untilDate: {type: GraphQLString}},
+            resolve: nestedAvailabilityResolver
         },
         preferences: {
             type: UserPreferences

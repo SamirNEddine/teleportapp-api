@@ -1,4 +1,5 @@
 const {google} = require('googleapis');
+const User = require('../model/User');
 
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -36,4 +37,43 @@ module.exports.createCalendarEvent = async function (credentials) {
     });
 
     console.log(data.calendars.primary.busy);
+};
+
+module.exports.getCalendarEventsUpdates = async function (userId, integrationData, localTodayDate, localTodayZeroHoursUTC, localToday24HoursUTC) {
+    oauth2Client.setCredentials(integrationData);
+    const calendar = google.calendar({
+        version: 'v3',
+        auth: oauth2Client
+    });
+    console.log(localTodayZeroHoursUTC.toISOString(), localToday24HoursUTC.toISOString());
+    let syncToken = integrationData.syncToken;
+    let syncDate = integrationData.syncDate;
+    let data = null;
+    if(!syncToken || new Date(syncDate).getTime() !== localTodayDate.getTime()){
+        const response = await calendar.events.list({
+            calendarId: 'primary',
+            timeMax: localToday24HoursUTC.toISOString(),
+            timeMin: localTodayZeroHoursUTC.toISOString()
+        });
+        data = response.data;
+
+        syncDate = localTodayDate;
+        syncToken = data.nextSyncToken;
+    }else{
+        const response = await calendar.events.list({
+            calendarId: 'primary',
+            syncToken: syncToken
+        });
+        data = response.data;
+        syncToken = data.nextSyncToken;
+        console.log(data);
+    }
+
+    if(syncToken !== integrationData.syncToken){
+        integrationData.syncToken = syncToken;
+        integrationData.syncDate = syncDate;
+        const user = await User.findById(userId);
+        user.setIntegrationData('google', integrationData);
+        await user.save();
+    }
 };
