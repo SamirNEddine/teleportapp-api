@@ -52,6 +52,7 @@ const UserSchema = Schema({
     },
     password: {
         type: String,
+        select: false
     },
     profilePictureURL: {
         type: String

@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const {inputFields} = require('../type');
+const {UserType, inputFields} = require('../type');
 const {authenticatedResolver} = require('../../../utils/authentication');
 const {
     userResolver,
@@ -12,9 +12,9 @@ const {
 
 /** Queries definitions **/
 const user = {
-    type: GraphQLString,
+    type: UserType,
     args: inputFields.user,
-    resolve: userResolver
+    resolve: authenticatedResolver(userResolver)
 };
 const getGoogleCalendarAuthURL = {
     type: GraphQLString,
