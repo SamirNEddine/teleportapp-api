@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AvailabilitySchema = Schema({
+    userId:{
+        type: Schema.Types.ObjectID,
+        required: true
+    },
     startDateTime:{
         type: Date,
         required: true
