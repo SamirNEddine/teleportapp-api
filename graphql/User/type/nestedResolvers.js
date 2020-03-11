@@ -15,7 +15,7 @@ module.exports.nestedAvailabilityResolver = async function (user, {timeFrameInHo
         //Perform a calendar sync if needed
         await performCalendarSync(user, timeFrameInHours);
 
-        return "X";
+        return "To do";
     }catch (error) {
         console.debug(error);
         throw(error);
