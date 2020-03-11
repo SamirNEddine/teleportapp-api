@@ -19,23 +19,6 @@ const IntegrationSchema = Schema ({
     },
 });
 
-/** TimeSlotSchema Schema **/
-//TimeSlotSchema to be used in UserSchema
-const TimeSlotSchema = Schema ({
-    startTime: {
-        type: String,
-        required: true
-    },
-    endTime: {
-        type: String,
-        required: true
-    },
-    availabilityLevel: {
-        type: Number,
-        required: true
-    }
-});
-
 /** User Preferences Schema **/
 //UserPreferences to be used in UserSchema
 const UserPreferences = Schema ({
@@ -69,6 +52,7 @@ const UserSchema = Schema({
     },
     password: {
         type: String,
+        select: false
     },
     profilePictureURL: {
         type: String
@@ -82,15 +66,11 @@ const UserSchema = Schema({
     skills: [{
         type: Schema.Types.ObjectID
     }],
-    availability: [{
-        type: TimeSlotSchema
-    }],
     preferences: {
         type: UserPreferences
     },
     timezoneOffset: {
-        type: Number,
-        required: true
+        type: Number
     }
 }, {timestamp: true});
 

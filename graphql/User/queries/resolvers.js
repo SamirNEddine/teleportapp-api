@@ -1,8 +1,9 @@
+const User = require('../../../model/User');
 const {generateCalendarAccessAuthURL} = require('../../../utils/google');
 
-module.exports.userResolver = function () {
+module.exports.userResolver = async function (_, args, {jwtUser}) {
     try{
-        return 'To do';
+        return await User.findById(jwtUser.id);
     }catch (error) {
         console.debug(error);
         throw(error);
