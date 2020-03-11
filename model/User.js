@@ -70,8 +70,7 @@ const UserSchema = Schema({
         type: UserPreferences
     },
     timezoneOffset: {
-        type: Number,
-        required: true
+        type: Number
     }
 }, {timestamp: true});
 

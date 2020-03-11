@@ -10,7 +10,7 @@ const AvailabilitySchema = Schema({
         type: Date,
         required: true
     },
-    endDatetime:{
+    endDateTime:{
         type: Date,
         required: true
     },
@@ -18,21 +18,25 @@ const AvailabilitySchema = Schema({
         type: String,
         enum: ['available', 'focus', 'busy', 'non-assigned'],
         required: true,
-        default: 'non-assigned'
+        default: 'busy'
     },
     communicationMode:{
         type: String,
         enum: ['sync', 'async'],
         required: true,
-        default: 'sync'
+        default: 'async'
     },
     interactivityLevel: {
         type: String,
         enum: ['unknown', 'none', 'low', 'high'],
         required: true,
-        default: 'unknown'
+        default: 'none'
     },
     externalIdentifier: {
+        type: String,
+        required: true
+    },
+    externalDescription: {
         type: String,
         required: true
     }
