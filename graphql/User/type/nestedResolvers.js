@@ -1,6 +1,4 @@
 const Skill = require('../../../model/Skill');
-const Availability = require('../../../model/Availability');;
-const {performCalendarSync} = require('../../../utils/google')
 
 module.exports.nestedUserSkillsResolver = async function (user) {
     try{
@@ -12,9 +10,6 @@ module.exports.nestedUserSkillsResolver = async function (user) {
 };
 module.exports.nestedAvailabilityResolver = async function (user, {timeFrameInHours=120}) {
     try{
-        //Perform a calendar sync if needed
-        await performCalendarSync(user, timeFrameInHours);
-
         return "To do";
     }catch (error) {
         console.debug(error);
