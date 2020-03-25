@@ -4,6 +4,7 @@ const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
 const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
+const {updateSlackIntegrationForUser} = require('../../../helpers/contextService');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
     try{
@@ -49,7 +50,7 @@ module.exports.signInWithSlackResolver = async function (_, {code}){
         if(!user){
             user = User(fetchedUserInfo);
         }
-        user.setIntegrationData('slack', slackIntegrationData);
+        await updateSlackIntegrationForUser(user.id, slackIntegrationData);
         user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
         user.refreshToken = getJWTRefreshTokenForUser(user.id);
         await user.save();
