@@ -38,6 +38,8 @@ const UserPreferences = Schema ({
         get: getDailySetupTime
     },
 });
+UserPreferences.set('toObject', { getters: true });
+UserPreferences.set('toJSON', { getters: true });
 const UserSchema = Schema({
     firstName: {
         type: String,
@@ -68,12 +70,19 @@ const UserSchema = Schema({
         type: Schema.Types.ObjectID
     }],
     preferences: {
-        type: UserPreferences
+        type: UserPreferences,
+        default: {}
     },
     timezoneOffset: {
         type: Number
+    },
+    IANATimezone: {
+        type: String,
+        required: true
     }
 }, {timestamp: true});
+UserSchema.set('toObject', { getters: true });
+UserSchema.set('toJSON', { getters: true });
 
 /** Password hashing **/
 UserSchema.pre('save', async  function(next) {
@@ -90,15 +99,6 @@ const User = new mongoose.model('user', UserSchema);
 
 User.prototype.verifyPassword = async function(password) {
     return await verifyPassword(password, this.password);
-};
-User.prototype.getTodayStartDayTimestamp = function() {
-    return getLocalTodayInUTCTimestamp(this.timezoneOffset) + parseInt(this.preferences.startTime.slice(0,2))*60*60*1000 + parseInt(this.preferences.startTime.slice(2))*60*1000;
-};
-User.prototype.getTodayEndDayTimestamp = function() {
-    return getLocalTodayInUTCTimestamp(this.timezoneOffset) + parseInt(this.preferences.endTime.slice(0,2))*60*60*1000 + parseInt(this.preferencesendTime.slice(2))*60*1000;
-};
-User.prototype.getTodayDailySetupTimeStamp = function() {
-    return getLocalTodayInUTCTimestamp(this.timezoneOffset) + parseInt(this.preferences.dailySetupTime.slice(0,2))*60*60*1000 + parseInt(this.preferences.dailySetupTime.slice(2))*60*1000;
 };
 
 /** Export **/

@@ -28,9 +28,14 @@ const updateIntegrationForUser = async function (userId, name, data) {
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
 };
+const getAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
+
+};
+
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'slack', data);
 };
 module.exports.updateGoogleIntegrationForUser = updateGoogleIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'google', data);
 };
+module.exports.getAvailabilityForUser = getAvailabilityForUser;
