@@ -13,3 +13,6 @@ module.exports.updateUserTimezoneIfNeeded = async function (userId, timezoneOffs
             {timezoneOffset});
     }
 };
+module.exports.getLocalTodayInUTCTimestamp = function () {
+    
+};
