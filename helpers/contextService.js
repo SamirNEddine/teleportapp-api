@@ -23,13 +23,21 @@ const updateIntegrationForUser = async function (userId, name, data) {
         proxy: false
     };
     const response = await axios(request);
-    console.log(response.data);
     if(response.status !== 200){
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
 };
 const getAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
-
+    const request = {
+        method: "GET",
+        url: `${contextServiceAPIBaseURL}/availability?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+    console.log(response.data);
+    return response.data;
 };
 
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {

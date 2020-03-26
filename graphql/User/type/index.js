@@ -13,20 +13,33 @@ const {
 const TimeSlot = new GraphQLObjectType({
     name: 'TimeSlot',
     fields: () => ({
-        startTime: {
-            type: NonNull(GraphQLInt)
+        start: {
+            type: NonNull(GraphQLString)
         },
-        endTime: {
-            type: NonNull(GraphQLInt)
+        end: {
+            type: NonNull(GraphQLString)
         },
         status: {
             type: NonNull(GraphQLString)
+        }
+    })
+});
+
+/** Nested Availability type **/
+const AvailabilityType = new GraphQLObjectType({
+    name: 'Availability',
+    fields: () => ({
+        busyTimeSlots: {
+            type: GraphQLList(TimeSlot)
         },
-        communicationMode: {
-            type: NonNull(GraphQLString)
+        focusTimeSlots: {
+            type: GraphQLList(TimeSlot)
         },
-        interactivityLevel: {
-            type: NonNull(GraphQLString)
+        availableTimeSlots: {
+            type: GraphQLList(TimeSlot)
+        },
+        unassignedTimeSlots: {
+            type: GraphQLList(TimeSlot)
         }
     })
 });
@@ -78,7 +91,7 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedUserSkillsResolver
         },
         availability: {
-            type: GraphQLList(TimeSlot),
+            type: AvailabilityType,
             args: {untilDate: {type: GraphQLString}},
             resolve: nestedAvailabilityResolver
         },

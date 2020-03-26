@@ -14,8 +14,6 @@ module.exports.nestedAvailabilityResolver = async function (user, {timeFrameInHo
     try{
         const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, user.IANATimezone);
         const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, user.IANATimezone);
-        console.log(new Date(startTimestamp), new Date(endTimestamp));
-        return "ok";
         return await getAvailabilityForUser(user.id, startTimestamp, endTimestamp);
     }catch (error) {
         console.debug(error);
