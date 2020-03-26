@@ -1,21 +1,45 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const {verifyPassword} = require('../utils/authentication');
+const {getLocalTodayInUTCTimestamp} = require('../utils/timezone');
 
 /** User Preferences Schema **/
 //UserPreferences to be used in UserSchema
-//NB: Time here is a string representation  of the time in 24 hours format with a leading digit. Example: 8:30 a.m. => 0830
+// NB: Time here is a string representation  of the time in 24 hours format with a leading digit. Example: 8:30 a.m. => 0830
+const DEFAULT_START_WORK_TIME = '0900';
+const DEFAULT_END_WORK_TIME = '1800';
+const DEFAULT_DAILY_SETUP_TIME = '0930';
+const getStartWorkTime = function (startWorkTime) {
+    if(!parseInt(startWorkTime)){
+        return DEFAULT_START_WORK_TIME;
+    }
+};
+const getEndWorkTime = function (endWorkTime) {
+    if(!parseInt(endWorkTime)){
+        return DEFAULT_END_WORK_TIME;
+    }
+};
+const getDailySetupTime = function (dailySetupTime) {
+    if(!parseInt(dailySetupTime)){
+        return DEFAULT_DAILY_SETUP_TIME;
+    }
+};
 const UserPreferences = Schema ({
     startWorkTime: {
-        type: String
+        type: String,
+        get: getStartWorkTime
     },
     endWorkTime: {
-        type: String
+        type: String,
+        get: getEndWorkTime
     },
     dailySetupTime: {
-        type: String
+        type: String,
+        get: getDailySetupTime
     },
 });
+UserPreferences.set('toObject', { getters: true });
+UserPreferences.set('toJSON', { getters: true });
 const UserSchema = Schema({
     firstName: {
         type: String,
@@ -46,12 +70,19 @@ const UserSchema = Schema({
         type: Schema.Types.ObjectID
     }],
     preferences: {
-        type: UserPreferences
+        type: UserPreferences,
+        default: {}
     },
     timezoneOffset: {
         type: Number
+    },
+    IANATimezone: {
+        type: String,
+        required: true
     }
 }, {timestamp: true});
+UserSchema.set('toObject', { getters: true });
+UserSchema.set('toJSON', { getters: true });
 
 /** Password hashing **/
 UserSchema.pre('save', async  function(next) {

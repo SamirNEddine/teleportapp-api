@@ -25,6 +25,7 @@
     "googleapis": "^47.0.0",
     "graphql": "^14.6.0",
     "jsonwebtoken": "^8.5.1",
+    "luxon": "^1.22.2",
     "mongoose": "^5.8.11",
     "redis": "^3.0.2"
   }
