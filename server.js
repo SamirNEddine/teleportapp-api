@@ -5,6 +5,7 @@ const graphqlHTTP = require('express-graphql');
 const {getGraphqlCORS, getStatusCORS} = require('./utils/cors');
 const {httpRequestAuth} = require('./middleware/authentication');
 const {httpTimezoneCheck} = require('./middleware/timezone');
+const bodyParser = require('body-parser');
 
 /** Connect to the database **/
 connectToDb();
@@ -18,6 +19,7 @@ const schema = require('./graphql/schema');
 //Add it to the express app as a middleware
 app.use(
     '/graphql',
+    bodyParser.json(),
     getGraphqlCORS(),
     httpRequestAuth,
     httpTimezoneCheck,
@@ -25,7 +27,7 @@ app.use(
         schema,
         context: {
             jwtUser: req.jwtUser,
-            timezoneOffset: req.timezoneOffset,
+            IANATimezone: req.IANATimezone,
             error: req.error
         },
         graphiql: (process.env.GRAPHIQLE_ENABLED === 1)

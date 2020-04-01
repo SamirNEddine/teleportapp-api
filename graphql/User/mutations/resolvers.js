@@ -6,13 +6,13 @@ const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('..
 const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
 const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser} = require('../../../helpers/contextService');
 
-module.exports.signInWithEmailResolver = async function (_, {emailAddress}) {
+module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
     try{
         //Check if email exists
         let user = await User.findOne({emailAddress});
         if(!user) {
             const fullName = nameFromEmail(emailAddress);
-            user = User({emailAddress, firstName: fullName.firstName, lastName: fullName.lastName});
+            user = User({emailAddress, firstName: fullName.firstName, lastName: fullName.lastName, IANATimezone});
             user = await user.save();
         }
         if(user.password) {
@@ -42,18 +42,19 @@ module.exports.authWithTemporaryCodeResolver = async function (_, {emailAddress,
         throw(error);
     }
 };
-module.exports.signInWithSlackResolver = async function (_, {code}){
+module.exports.signInWithSlackResolver = async function (_, {code}, {IANATimezone}){
     try {
         const slackIntegrationData = await signInWithSlack(code);
         const fetchedUserInfo = await fetchUserInfoFromSlack(slackIntegrationData);
         let user = await User.findOne({emailAddress: fetchedUserInfo.emailAddress});
         if(!user){
+            fetchedUserInfo.IANATimezone = IANATimezone;
             user = User(fetchedUserInfo);
         }
         await updateSlackIntegrationForUser(user.id, slackIntegrationData);
+        await user.save();
         user.accessToken = getJWTAccessTokenForUser(user.id, user.emailAddress);
         user.refreshToken = getJWTRefreshTokenForUser(user.id);
-        await user.save();
         return user;
     }catch (error) {
         console.debug(error);

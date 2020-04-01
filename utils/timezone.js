@@ -7,7 +7,7 @@ const IANA_TIMEZONE_KEY = "IANATimezone";
 const updateUserIANATimezoneIfNeeded = async function (userId, IANATimezone) {
     const cacheKey = `${IANA_TIMEZONE_KEY}_${userId}`;
     const lastRecordedTimezoneOffset = await redisGetAsync(cacheKey);
-    if(lastRecordedTimezoneOffset !== IANATimezone){
+    if(lastRecordedTimezoneOffset && lastRecordedTimezoneOffset !== IANATimezone){
         await redisSetAsync(cacheKey, IANATimezone);
         await User.findOneAndUpdate(
             {_id: userId},
