@@ -39,6 +39,18 @@ const getCurrentAvailabilityForUser = async function (userId, startTimestamp, en
     console.log(response.data);
     return response.data;
 };
+const getSuggestedAvailabilityForUser = async function (userId, startTimestamp, endTimestamp, minAvailableSlotInMinutes, minFocusSlotInMinutes) {
+    const request = {
+        method: "GET",
+        url: `${contextServiceAPIBaseURL}/availability/suggested?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}&minAvailableSlotInMinutes=${minAvailableSlotInMinutes}&minFocusSlotInMinutes=${minFocusSlotInMinutes}`
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+    console.log(response.data);
+    return response.data;
+};
 
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'slack', data);
@@ -47,3 +59,4 @@ module.exports.updateGoogleIntegrationForUser = updateGoogleIntegrationForUser =
     await updateIntegrationForUser(userId, 'google', data);
 };
 module.exports.getCurrentAvailabilityForUser = getCurrentAvailabilityForUser;
+module.exports.getSuggestedAvailabilityForUser = getSuggestedAvailabilityForUser;
