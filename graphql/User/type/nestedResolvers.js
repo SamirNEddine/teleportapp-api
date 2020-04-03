@@ -10,11 +10,20 @@ module.exports.nestedUserSkillsResolver = async function (user) {
         throw(error);
     }
 };
-module.exports.nestedAvailabilityResolver = async function (user, {timeFrameInHours=120}) {
+module.exports.nestedCurrentAvailabilityResolver = async function (user) {
     try{
         const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, user.IANATimezone);
         const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, user.IANATimezone);
         return await getCurrentAvailabilityForUser(user.id, startTimestamp, endTimestamp);
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.nestedSuggestedAvailabilityResolver = async function (user) {
+    try{
+        const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, user.IANATimezone);
+        const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, user.IANATimezone);
     }catch (error) {
         console.debug(error);
         throw(error);
