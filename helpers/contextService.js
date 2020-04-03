@@ -36,7 +36,6 @@ const getCurrentAvailabilityForUser = async function (userId, startTimestamp, en
     if(response.status !== 200){
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
-    console.log(response.data);
     return response.data;
 };
 const getSuggestedAvailabilityForUser = async function (userId, startTimestamp, endTimestamp, minAvailableSlotInMinutes, minFocusSlotInMinutes) {
@@ -48,10 +47,10 @@ const getSuggestedAvailabilityForUser = async function (userId, startTimestamp, 
     if(response.status !== 200){
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
-    console.log(response.data);
     return response.data;
 };
 
+/** Exports **/
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'slack', data);
 };
