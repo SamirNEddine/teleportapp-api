@@ -27,23 +27,35 @@ const updateIntegrationForUser = async function (userId, name, data) {
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
 };
-const getAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
+const getCurrentAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
     const request = {
         method: "GET",
-        url: `${contextServiceAPIBaseURL}/availability?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
+        url: `${contextServiceAPIBaseURL}/availability/current?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
     };
     const response = await axios(request);
     if(response.status !== 200){
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
-    console.log(response.data);
+    return response.data;
+};
+const getSuggestedAvailabilityForUser = async function (userId, startTimestamp, endTimestamp, minAvailableSlotInMinutes, minFocusSlotInMinutes) {
+    const request = {
+        method: "GET",
+        url: `${contextServiceAPIBaseURL}/availability/suggested?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}&minAvailableSlotInMinutes=${minAvailableSlotInMinutes}&minFocusSlotInMinutes=${minFocusSlotInMinutes}`
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
     return response.data;
 };
 
+/** Exports **/
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'slack', data);
 };
 module.exports.updateGoogleIntegrationForUser = updateGoogleIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'google', data);
 };
-module.exports.getAvailabilityForUser = getAvailabilityForUser;
+module.exports.getCurrentAvailabilityForUser = getCurrentAvailabilityForUser;
+module.exports.getSuggestedAvailabilityForUser = getSuggestedAvailabilityForUser;

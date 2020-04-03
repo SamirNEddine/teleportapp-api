@@ -1,6 +1,7 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
 const {SkillType} = require('../../Skill');
+const {nestedUserSkillsResolver, nestedCurrentAvailabilityResolver, nestedSuggestedAvailabilityResolver} = require('./nestedResolvers');
 const {
     GraphQLObjectType,
     GraphQLID,
@@ -60,9 +61,6 @@ const UserPreferences = new GraphQLObjectType({
     })
 });
 
-/** Nested resolvers **/
-const {nestedUserSkillsResolver, nestedAvailabilityResolver} = require('./nestedResolvers');
-
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
 module.exports.UserType = new GraphQLObjectType({
@@ -90,10 +88,13 @@ module.exports.UserType = new GraphQLObjectType({
             type: GraphQLList(SkillType),
             resolve: nestedUserSkillsResolver
         },
-        availability: {
+        currentAvailability: {
             type: AvailabilityType,
-            args: {untilDate: {type: GraphQLString}},
-            resolve: nestedAvailabilityResolver
+            resolve: nestedCurrentAvailabilityResolver
+        },
+        suggestedAvailability: {
+            type: AvailabilityType,
+            resolve: nestedSuggestedAvailabilityResolver
         },
         preferences: {
             type: UserPreferences
