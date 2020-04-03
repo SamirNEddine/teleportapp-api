@@ -27,7 +27,7 @@ const updateIntegrationForUser = async function (userId, name, data) {
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
 };
-const getAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
+const getCurrentAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
     const request = {
         method: "GET",
         url: `${contextServiceAPIBaseURL}/availability/current?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
@@ -46,4 +46,4 @@ module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = a
 module.exports.updateGoogleIntegrationForUser = updateGoogleIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'google', data);
 };
-module.exports.getAvailabilityForUser = getAvailabilityForUser;
+module.exports.getCurrentAvailabilityForUser = getCurrentAvailabilityForUser;
