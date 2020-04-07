@@ -25,7 +25,7 @@ module.exports.nestedSuggestedAvailabilityResolver = async function (user) {
         const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, user.IANATimezone);
         const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, user.IANATimezone);
         //To do: Get User profile values here
-        return await getSuggestedAvailabilityForUser(user.id, startTimestamp, endTimestamp, 15, 60);
+        return await getSuggestedAvailabilityForUser(user.id, startTimestamp, endTimestamp, 15, 60);;
     }catch (error) {
         console.debug(error);
         throw(error);

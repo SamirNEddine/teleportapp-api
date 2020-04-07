@@ -4,7 +4,7 @@ const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
 const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
-const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser} = require('../../../helpers/contextService');
+const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser, updateRemainingAvailabilityForUser} = require('../../../helpers/contextService');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
     try{
@@ -111,3 +111,12 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code},
         throw(error);
     }
 };
+module.exports.updateRemainingAvailabilityResolver = async function (_, {timeSlots}, {jwtUser}) {
+    try {
+        await updateRemainingAvailabilityForUser(jwtUser.id, timeSlots);
+        return 'OK';
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+}

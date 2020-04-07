@@ -8,7 +8,8 @@ const {
     signInWithSlackResolver,
     refreshAccessTokenResolver,
     updateAvailabilityLevelResolver,
-    addGoogleCalendarIntegrationResolver
+    addGoogleCalendarIntegrationResolver,
+    updateRemainingAvailabilityResolver
 } = require('./resolvers');
 
 /** Mutations definitions **/
@@ -47,6 +48,11 @@ const addGoogleCalendarIntegration = {
     args: inputFields.addGoogleCalendarIntegration,
     resolve: authenticatedResolver(addGoogleCalendarIntegrationResolver)
 };
+const updateRemainingAvailability = {
+    type: GraphQLString,
+    args: inputFields.updateRemainingAvailability,
+    resolve: authenticatedResolver(updateRemainingAvailabilityResolver)
+};
 
 /** Exports **/
 module.exports = {
@@ -56,5 +62,6 @@ module.exports = {
     refreshAccessToken,
     updateUserProfile,
     updateAvailabilityLevel,
-    addGoogleCalendarIntegration
+    addGoogleCalendarIntegration,
+    updateRemainingAvailability
 };
