@@ -30,7 +30,7 @@ const updateIntegrationForUser = async function (userId, name, data) {
 const getCurrentAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
     const request = {
         method: "GET",
-        url: `${contextServiceAPIBaseURL}/availability/current?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
+        url: `${contextServiceAPIBaseURL}/availability/remaining?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
     };
     const response = await axios(request);
     if(response.status !== 200){
