@@ -1,7 +1,7 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
 const {SkillType} = require('../../Skill');
-const {nestedUserSkillsResolver, nestedCurrentAvailabilityResolver, nestedSuggestedAvailabilityResolver} = require('./nestedResolvers');
+const {nestedUserSkillsResolver, nestedRemainingAvailabilityResolver, nestedSuggestedAvailabilityResolver, nestedCurrentAvailabilityResolver} = require('./nestedResolvers');
 const {
     GraphQLObjectType,
     GraphQLID,
@@ -89,8 +89,12 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedUserSkillsResolver
         },
         currentAvailability: {
-            type: AvailabilityType,
+            type: TimeSlot,
             resolve: nestedCurrentAvailabilityResolver
+        },
+        remainingAvailability: {
+            type: AvailabilityType,
+            resolve: nestedRemainingAvailabilityResolver
         },
         suggestedAvailability: {
             type: AvailabilityType,
