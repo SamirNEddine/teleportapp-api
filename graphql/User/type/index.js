@@ -1,9 +1,10 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
 const {SkillType} = require('../../Skill');
-const {nestedUserSkillsResolver, nestedCurrentAvailabilityResolver, nestedSuggestedAvailabilityResolver} = require('./nestedResolvers');
+const {nestedUserSkillsResolver, nestedRemainingAvailabilityResolver, nestedSuggestedAvailabilityResolver, nestedCurrentAvailabilityResolver} = require('./nestedResolvers');
 const {
     GraphQLObjectType,
+    GraphQLInputObjectType,
     GraphQLID,
     GraphQLString,
     GraphQLInt,
@@ -89,8 +90,12 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedUserSkillsResolver
         },
         currentAvailability: {
-            type: AvailabilityType,
+            type: TimeSlot,
             resolve: nestedCurrentAvailabilityResolver
+        },
+        remainingAvailability: {
+            type: AvailabilityType,
+            resolve: nestedRemainingAvailabilityResolver
         },
         suggestedAvailability: {
             type: AvailabilityType,
@@ -109,6 +114,20 @@ module.exports.UserType = new GraphQLObjectType({
 });
 
 /** Input fields for queries and mutations **/
+const TimeSlotInput = new GraphQLInputObjectType({
+    name: 'TimeSlotInput',
+    fields: () => ({
+        start: {
+            type: NonNull(GraphQLString)
+        },
+        end: {
+            type: NonNull(GraphQLString)
+        },
+        status: {
+            type: NonNull(GraphQLString)
+        }
+    })
+});
 module.exports.inputFields = {
     //Mutations
     signInWithEmail: {
@@ -133,5 +152,8 @@ module.exports.inputFields = {
     },
     addGoogleCalendarIntegration: {
         code: {type: NonNull(GraphQLString)}
+    },
+    updateRemainingAvailability: {
+        timeSlots: {type: NonNull(GraphQLList(TimeSlotInput))}
     }
 };

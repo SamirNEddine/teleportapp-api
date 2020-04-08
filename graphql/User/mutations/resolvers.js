@@ -1,10 +1,11 @@
 const User = require('../../../model/User');
 const nameFromEmail = require('../../../utils/nameFromEmail');
+const {getTimestampFromLocalTodayTime} = require("../../../utils/timezone");
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
 const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
-const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser} = require('../../../helpers/contextService');
+const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser, updateRemainingAvailabilityForUser, getSuggestedAvailabilityForUser} = require('../../../helpers/contextService');
 
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
     try{
@@ -105,6 +106,29 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code},
     try {
         const googleIntegrationData = await authorizeCalendarAccess(code);
         await updateGoogleIntegrationForUser(jwtUser.id, googleIntegrationData);
+        return 'OK';
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.updateRemainingAvailabilityResolver = async function (_, {timeSlots}, {jwtUser}) {
+    try {
+        await updateRemainingAvailabilityForUser(jwtUser.id, timeSlots);
+        return 'OK';
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, args, {jwtUser, IANATimezone}) {
+    try {
+        const user = await User.findById(jwtUser.id);
+        const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, IANATimezone);
+        const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, IANATimezone);
+        //To do: Get User profile values here
+        const availability = await getSuggestedAvailabilityForUser(user.id, startTimestamp, endTimestamp, 15, 60);
+        await updateRemainingAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
         return 'OK';
     }catch (error) {
         console.debug(error);
