@@ -1,4 +1,5 @@
 const User = require('../../../model/User');
+const AvailabilityProfile = require('../../../model/AvailabilityProfile');
 const nameFromEmail = require('../../../utils/nameFromEmail');
 const {getTimestampFromLocalTodayTime} = require("../../../utils/timezone");
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
@@ -7,13 +8,15 @@ const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('..
 const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
 const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser, updateRemainingAvailabilityForUser, getSuggestedAvailabilityForUser} = require('../../../helpers/contextService');
 
+const DEFAULT_AVAILABILITY_PROFILE_KEY = 'notBusy';
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
     try{
         //Check if email exists
         let user = await User.findOne({emailAddress});
         if(!user) {
             const fullName = nameFromEmail(emailAddress);
-            user = User({emailAddress, firstName: fullName.firstName, lastName: fullName.lastName, IANATimezone});
+            const defaultProfile = await AvailabilityProfile.findOne({key: DEFAULT_AVAILABILITY_PROFILE_KEY});
+            user = User({emailAddress, firstName: fullName.firstName, lastName: fullName.lastName, availabilityProfile:defaultProfile.id, IANATimezone});
             user = await user.save();
         }
         if(user.password) {
@@ -49,6 +52,8 @@ module.exports.signInWithSlackResolver = async function (_, {code}, {IANATimezon
         const fetchedUserInfo = await fetchUserInfoFromSlack(slackIntegrationData);
         let user = await User.findOne({emailAddress: fetchedUserInfo.emailAddress});
         if(!user){
+            const defaultProfile = await AvailabilityProfile.findOne({key: DEFAULT_AVAILABILITY_PROFILE_KEY});
+            fetchedUserInfo.availabilityProfile = defaultProfile.id;
             fetchedUserInfo.IANATimezone = IANATimezone;
             user = User(fetchedUserInfo);
         }
