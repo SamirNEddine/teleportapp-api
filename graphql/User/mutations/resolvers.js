@@ -23,7 +23,8 @@ module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IAN
                 lunchTime: user.preferences.lunchTime,
                 dailySetupTime: defaultProfile.dailySetupTime,
                 minAvailableSlotInMinutes: defaultProfile.minAvailableSlotInMinutes,
-                minFocusSlotInMinutes: defaultProfile.minFocusSlotInMinutes
+                minFocusSlotInMinutes: defaultProfile.minFocusSlotInMinutes,
+                IANATimezone
             });
             user = await user.save();
         }
@@ -70,7 +71,8 @@ module.exports.signInWithSlackResolver = async function (_, {code}, {IANATimezon
                 lunchTime: user.preferences.lunchTime,
                 dailySetupTime: defaultProfile.dailySetupTime,
                 minAvailableSlotInMinutes: defaultProfile.minAvailableSlotInMinutes,
-                minFocusSlotInMinutes: defaultProfile.minFocusSlotInMinutes
+                minFocusSlotInMinutes: defaultProfile.minFocusSlotInMinutes,
+                IANATimezone
             });
         }
         await updateSlackIntegrationForUser(user.id, slackIntegrationData);
@@ -148,7 +150,7 @@ module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, a
         const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, IANATimezone);
         const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, IANATimezone);
         //To do: Get User profile values here
-        const availability = await getSuggestedAvailabilityForUser(user.id, startTimestamp, endTimestamp, 15, 60);
+        const availability = await getSuggestedAvailabilityForUser(user.id);
         await updateRemainingAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
         return 'OK';
     }catch (error) {

@@ -12,9 +12,7 @@ module.exports.nestedUserSkillsResolver = async function (user) {
 };
 module.exports.nestedRemainingAvailabilityResolver = async function (user) {
     try{
-        const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, user.IANATimezone);
-        const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, user.IANATimezone);
-        return await getRemainingAvailabilityForUser(user.id, startTimestamp, endTimestamp);
+        return await getRemainingAvailabilityForUser(user.id);
     }catch (error) {
         console.debug(error);
         throw(error);
@@ -22,10 +20,7 @@ module.exports.nestedRemainingAvailabilityResolver = async function (user) {
 };
 module.exports.nestedSuggestedAvailabilityResolver = async function (user) {
     try{
-        const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, user.IANATimezone);
-        const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, user.IANATimezone);
-        //To do: Get User profile values here
-        return await getSuggestedAvailabilityForUser(user.id, startTimestamp, endTimestamp, 15, 60);
+        return await getSuggestedAvailabilityForUser(user.id);
     }catch (error) {
         console.debug(error);
         throw(error);
@@ -33,9 +28,7 @@ module.exports.nestedSuggestedAvailabilityResolver = async function (user) {
 };
 module.exports.nestedCurrentAvailabilityResolver = async function (user) {
     try{
-        const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, user.IANATimezone);
-        const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, user.IANATimezone);
-        return await getCurrentAvailabilityForUser(user.id, startTimestamp, endTimestamp);
+        return await getCurrentAvailabilityForUser(user.id);
     }catch (error) {
         console.debug(error);
         throw(error);
