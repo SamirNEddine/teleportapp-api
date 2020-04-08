@@ -9,6 +9,7 @@ const {getLocalTodayInUTCTimestamp} = require('../utils/timezone');
 const DEFAULT_START_WORK_TIME = '0900';
 const DEFAULT_END_WORK_TIME = '1800';
 const DEFAULT_DAILY_SETUP_TIME = '0930';
+const DEFAULT_LUNCH_TIME = '1230';
 const getStartWorkTime = function (startWorkTime) {
     if(!parseInt(startWorkTime)){
         return DEFAULT_START_WORK_TIME;
@@ -27,6 +28,12 @@ const getDailySetupTime = function (dailySetupTime) {
     }
     return dailySetupTime;
 };
+const getLunchTime = function (lunchTime) {
+    if(!parseInt(lunchTime)){
+        return DEFAULT_LUNCH_TIME;
+    }
+    return lunchTime;
+};
 const UserPreferences = Schema ({
     startWorkTime: {
         type: String,
@@ -40,6 +47,10 @@ const UserPreferences = Schema ({
         type: String,
         get: getDailySetupTime
     },
+    lunchTime: {
+        type: String,
+        get: getLunchTime
+    }
 });
 UserPreferences.set('toObject', { getters: true });
 UserPreferences.set('toJSON', { getters: true });
