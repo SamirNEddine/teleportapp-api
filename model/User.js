@@ -77,18 +77,12 @@ const UserSchema = Schema({
     profilePictureURL: {
         type: String
     },
-    phoneNumber: {
-        String
-    },
     skills: [{
         type: Schema.Types.ObjectID
     }],
     preferences: {
         type: UserPreferences,
         default: {}
-    },
-    timezoneOffset: {
-        type: Number
     },
     IANATimezone: {
         type: String,
