@@ -82,6 +82,27 @@ const updateRemainingAvailabilityForUser = async function (userId, timeSlots) {
     }
     return response.data;
 };
+const updateUserContextParams = async function (userId, userContextParams) {
+    const request = {
+        method: "POST",
+        url: `${contextServiceAPIBaseURL}/userContextParams/`,
+        headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+        },
+        data: JSON.stringify({
+            clientId,
+            clientSecret,
+            userId,
+            userContextParams,
+        }),
+        proxy: false
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+};
 
 /** Exports **/
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {
@@ -94,3 +115,4 @@ module.exports.getRemainingAvailabilityForUser = getRemainingAvailabilityForUser
 module.exports.getSuggestedAvailabilityForUser = getSuggestedAvailabilityForUser;
 module.exports.getCurrentAvailabilityForUser = getCurrentAvailabilityForUser;
 module.exports.updateRemainingAvailabilityForUser = updateRemainingAvailabilityForUser;
+module.exports.updateUserContextParams = updateUserContextParams;
