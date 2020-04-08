@@ -9,7 +9,8 @@ const {
     refreshAccessTokenResolver,
     updateAvailabilityLevelResolver,
     addGoogleCalendarIntegrationResolver,
-    updateRemainingAvailabilityResolver
+    updateRemainingAvailabilityResolver,
+    getAndConfirmRemainingAvailabilityResolver
 } = require('./resolvers');
 
 /** Mutations definitions **/
@@ -53,6 +54,10 @@ const updateRemainingAvailability = {
     args: inputFields.updateRemainingAvailability,
     resolve: authenticatedResolver(updateRemainingAvailabilityResolver)
 };
+const getAndConfirmRemainingAvailability = {
+    type: GraphQLString,
+    resolve: authenticatedResolver(getAndConfirmRemainingAvailabilityResolver)
+};
 
 /** Exports **/
 module.exports = {
@@ -63,5 +68,6 @@ module.exports = {
     updateUserProfile,
     updateAvailabilityLevel,
     addGoogleCalendarIntegration,
-    updateRemainingAvailability
+    updateRemainingAvailability,
+    getAndConfirmRemainingAvailability
 };

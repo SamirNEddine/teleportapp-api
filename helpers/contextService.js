@@ -8,7 +8,7 @@ const clientSecret = process.env.CONTEXT_SERVICE_API_CLIENT_SECRET;
 const updateIntegrationForUser = async function (userId, name, data) {
     const request = {
         method: "POST",
-        url: `${contextServiceAPIBaseURL}integration/`,
+        url: `${contextServiceAPIBaseURL}/integration/`,
         headers: {
             'Accept': '*/*',
             'Content-Type': 'application/json',

@@ -13,16 +13,19 @@ const getStartWorkTime = function (startWorkTime) {
     if(!parseInt(startWorkTime)){
         return DEFAULT_START_WORK_TIME;
     }
+    return startWorkTime;
 };
 const getEndWorkTime = function (endWorkTime) {
     if(!parseInt(endWorkTime)){
         return DEFAULT_END_WORK_TIME;
     }
+    return endWorkTime;
 };
 const getDailySetupTime = function (dailySetupTime) {
     if(!parseInt(dailySetupTime)){
         return DEFAULT_DAILY_SETUP_TIME;
     }
+    return dailySetupTime;
 };
 const UserPreferences = Schema ({
     startWorkTime: {
