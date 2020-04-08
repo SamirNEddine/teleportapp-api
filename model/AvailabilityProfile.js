@@ -6,6 +6,10 @@ const AvailabilityProfile = Schema({
         type: String,
         required: true
     },
+    key: {
+        type: String,
+        required: true
+    },
     minAvailableSlotInMinutes: {
         type: Number,
         required: true
