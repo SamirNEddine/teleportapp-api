@@ -8,7 +8,9 @@ const AvailabilityProfile = Schema({
     },
     key: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        dropDups: true
     },
     minAvailableSlotInMinutes: {
         type: Number,
