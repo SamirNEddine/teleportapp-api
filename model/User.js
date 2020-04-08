@@ -77,6 +77,10 @@ const UserSchema = Schema({
     profilePictureURL: {
         type: String
     },
+    availabilityProfile: {
+        type: Schema.Types.ObjectID,
+        required: true
+    },
     skills: [{
         type: Schema.Types.ObjectID
     }],
