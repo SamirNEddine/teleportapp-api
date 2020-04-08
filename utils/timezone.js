@@ -1,14 +1,16 @@
 const {DateTime} = require("luxon");
 const {redisGetAsync, redisSetAsync} = require('./redis');
 const User = require('../model/User');
+const {updateUserContextParams} = require('../helpers/contextService');
 
 const IANA_TIMEZONE_KEY = "IANATimezone";
 
 const updateUserIANATimezoneIfNeeded = async function (userId, IANATimezone) {
     const cacheKey = `${IANA_TIMEZONE_KEY}_${userId}`;
     const lastRecordedTimezoneOffset = await redisGetAsync(cacheKey);
-    if(lastRecordedTimezoneOffset && lastRecordedTimezoneOffset !== IANATimezone){
+    if(lastRecordedTimezoneOffset !== IANATimezone){
         await redisSetAsync(cacheKey, IANATimezone);
+        await updateUserContextParams(userId, {IANATimezone});
         await User.findOneAndUpdate(
             {_id: userId},
             {IANATimezone});
