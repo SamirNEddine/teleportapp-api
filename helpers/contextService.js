@@ -27,10 +27,10 @@ const updateIntegrationForUser = async function (userId, name, data) {
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
 };
-const getRemainingAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
+const getRemainingAvailabilityForUser = async function (userId) {
     const request = {
         method: "GET",
-        url: `${contextServiceAPIBaseURL}/availability/remaining?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
+        url: `${contextServiceAPIBaseURL}/availability/remaining?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}`
     };
     const response = await axios(request);
     if(response.status !== 200){
@@ -38,10 +38,10 @@ const getRemainingAvailabilityForUser = async function (userId, startTimestamp, 
     }
     return response.data;
 };
-const getSuggestedAvailabilityForUser = async function (userId, startTimestamp, endTimestamp, minAvailableSlotInMinutes, minFocusSlotInMinutes) {
+const getSuggestedAvailabilityForUser = async function (userId) {
     const request = {
         method: "GET",
-        url: `${contextServiceAPIBaseURL}/availability/suggested?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}&minAvailableSlotInMinutes=${minAvailableSlotInMinutes}&minFocusSlotInMinutes=${minFocusSlotInMinutes}`
+        url: `${contextServiceAPIBaseURL}/availability/suggested?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}`
     };
     const response = await axios(request);
     if(response.status !== 200){
@@ -49,10 +49,10 @@ const getSuggestedAvailabilityForUser = async function (userId, startTimestamp, 
     }
     return response.data;
 };
-const getCurrentAvailabilityForUser = async function (userId, startTimestamp, endTimestamp) {
+const getCurrentAvailabilityForUser = async function (userId) {
     const request = {
         method: "GET",
-        url: `${contextServiceAPIBaseURL}/availability/current?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
+        url: `${contextServiceAPIBaseURL}/availability/current?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}`
     };
     const response = await axios(request);
     if(response.status !== 200){
@@ -82,6 +82,27 @@ const updateRemainingAvailabilityForUser = async function (userId, timeSlots) {
     }
     return response.data;
 };
+const updateUserContextParams = async function (userId, userContextParams) {
+    const request = {
+        method: "POST",
+        url: `${contextServiceAPIBaseURL}/userContextParams/`,
+        headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+        },
+        data: JSON.stringify({
+            clientId,
+            clientSecret,
+            userId,
+            userContextParams,
+        }),
+        proxy: false
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+};
 
 /** Exports **/
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {
@@ -94,3 +115,4 @@ module.exports.getRemainingAvailabilityForUser = getRemainingAvailabilityForUser
 module.exports.getSuggestedAvailabilityForUser = getSuggestedAvailabilityForUser;
 module.exports.getCurrentAvailabilityForUser = getCurrentAvailabilityForUser;
 module.exports.updateRemainingAvailabilityForUser = updateRemainingAvailabilityForUser;
+module.exports.updateUserContextParams = updateUserContextParams;

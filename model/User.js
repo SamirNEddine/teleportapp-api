@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const {verifyPassword} = require('../utils/authentication');
-const {getLocalTodayInUTCTimestamp} = require('../utils/timezone');
+const AvailabilityProfile = require('./AvailabilityProfile');
+
+const Schema = mongoose.Schema;
 
 /** User Preferences Schema **/
 //UserPreferences to be used in UserSchema
@@ -9,6 +10,7 @@ const {getLocalTodayInUTCTimestamp} = require('../utils/timezone');
 const DEFAULT_START_WORK_TIME = '0900';
 const DEFAULT_END_WORK_TIME = '1800';
 const DEFAULT_DAILY_SETUP_TIME = '0930';
+const DEFAULT_LUNCH_TIME = '1230';
 const getStartWorkTime = function (startWorkTime) {
     if(!parseInt(startWorkTime)){
         return DEFAULT_START_WORK_TIME;
@@ -27,6 +29,12 @@ const getDailySetupTime = function (dailySetupTime) {
     }
     return dailySetupTime;
 };
+const getLunchTime = function (lunchTime) {
+    if(!parseInt(lunchTime)){
+        return DEFAULT_LUNCH_TIME;
+    }
+    return lunchTime;
+};
 const UserPreferences = Schema ({
     startWorkTime: {
         type: String,
@@ -40,6 +48,10 @@ const UserPreferences = Schema ({
         type: String,
         get: getDailySetupTime
     },
+    lunchTime: {
+        type: String,
+        get: getLunchTime
+    }
 });
 UserPreferences.set('toObject', { getters: true });
 UserPreferences.set('toJSON', { getters: true });
@@ -66,8 +78,9 @@ const UserSchema = Schema({
     profilePictureURL: {
         type: String
     },
-    phoneNumber: {
-        String
+    availabilityProfile: {
+        type: Schema.Types.ObjectID,
+        required: true
     },
     skills: [{
         type: Schema.Types.ObjectID
@@ -75,9 +88,6 @@ const UserSchema = Schema({
     preferences: {
         type: UserPreferences,
         default: {}
-    },
-    timezoneOffset: {
-        type: Number
     },
     IANATimezone: {
         type: String,
@@ -95,6 +105,20 @@ UserSchema.pre('save', async  function(next) {
         if (emailExist) throw (new Error("Email already exist!"));
     }
     next();
+});
+
+/** UserSchema virtual properties **/
+UserSchema.virtual('contextParams').get( async function() {
+    const availabilityProfile = await AvailabilityProfile.findById(this.availabilityProfile);
+    return {
+        startWorkTime: this.preferences.startWorkTime,
+        endWorkTime: this.preferences.endWorkTime,
+        lunchTime: this.preferences.lunchTime,
+        IANATimezone: this.IANATimezone,
+        dailySetupTime: availabilityProfile.dailySetupTime,
+        minAvailableSlotInMinutes: availabilityProfile.minAvailableSlotInMinutes,
+        minFocusSlotInMinutes: availabilityProfile.minFocusSlotInMinutes
+    }
 });
 
 /** Extend User model with helpers methods **/

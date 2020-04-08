@@ -1,19 +1,23 @@
 const User = require('../../../model/User');
+const AvailabilityProfile = require('../../../model/AvailabilityProfile');
 const nameFromEmail = require('../../../utils/nameFromEmail');
 const {getTimestampFromLocalTodayTime} = require("../../../utils/timezone");
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
 const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
-const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser, updateRemainingAvailabilityForUser, getSuggestedAvailabilityForUser} = require('../../../helpers/contextService');
+const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser, updateRemainingAvailabilityForUser, getSuggestedAvailabilityForUser, updateUserContextParams} = require('../../../helpers/contextService');
 
+const DEFAULT_AVAILABILITY_PROFILE_KEY = 'notBusy';
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
     try{
         //Check if email exists
         let user = await User.findOne({emailAddress});
         if(!user) {
             const fullName = nameFromEmail(emailAddress);
-            user = User({emailAddress, firstName: fullName.firstName, lastName: fullName.lastName, IANATimezone});
+            const defaultProfile = await AvailabilityProfile.findOne({key: DEFAULT_AVAILABILITY_PROFILE_KEY});
+            user = User({emailAddress, firstName: fullName.firstName, lastName: fullName.lastName, availabilityProfile:defaultProfile.id, IANATimezone});
+            await updateUserContextParams(user.id, await user.contextParams);
             user = await user.save();
         }
         if(user.password) {
@@ -49,8 +53,11 @@ module.exports.signInWithSlackResolver = async function (_, {code}, {IANATimezon
         const fetchedUserInfo = await fetchUserInfoFromSlack(slackIntegrationData);
         let user = await User.findOne({emailAddress: fetchedUserInfo.emailAddress});
         if(!user){
+            const defaultProfile = await AvailabilityProfile.findOne({key: DEFAULT_AVAILABILITY_PROFILE_KEY});
+            fetchedUserInfo.availabilityProfile = defaultProfile.id;
             fetchedUserInfo.IANATimezone = IANATimezone;
             user = User(fetchedUserInfo);
+            await updateUserContextParams(user.id, await user.contextParams);
         }
         await updateSlackIntegrationForUser(user.id, slackIntegrationData);
         await user.save();
@@ -127,7 +134,7 @@ module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, a
         const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, IANATimezone);
         const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, IANATimezone);
         //To do: Get User profile values here
-        const availability = await getSuggestedAvailabilityForUser(user.id, startTimestamp, endTimestamp, 15, 60);
+        const availability = await getSuggestedAvailabilityForUser(user.id);
         await updateRemainingAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
         return 'OK';
     }catch (error) {
