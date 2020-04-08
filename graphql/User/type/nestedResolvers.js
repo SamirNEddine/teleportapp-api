@@ -1,6 +1,5 @@
 const Skill = require('../../../model/Skill');
 const {getRemainingAvailabilityForUser, getSuggestedAvailabilityForUser, getCurrentAvailabilityForUser} = require('../../../helpers/contextService');
-const {getTimestampFromLocalTodayTime} = require('../../../utils/timezone');
 
 module.exports.nestedUserSkillsResolver = async function (user) {
     try{

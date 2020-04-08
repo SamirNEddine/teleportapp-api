@@ -17,15 +17,7 @@ module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IAN
             const fullName = nameFromEmail(emailAddress);
             const defaultProfile = await AvailabilityProfile.findOne({key: DEFAULT_AVAILABILITY_PROFILE_KEY});
             user = User({emailAddress, firstName: fullName.firstName, lastName: fullName.lastName, availabilityProfile:defaultProfile.id, IANATimezone});
-            await updateUserContextParams(user.id, {
-                startWorkTime: user.preferences.startWorkTime,
-                endWorkTime: user.preferences.endWorkTime,
-                lunchTime: user.preferences.lunchTime,
-                dailySetupTime: defaultProfile.dailySetupTime,
-                minAvailableSlotInMinutes: defaultProfile.minAvailableSlotInMinutes,
-                minFocusSlotInMinutes: defaultProfile.minFocusSlotInMinutes,
-                IANATimezone
-            });
+            await updateUserContextParams(user.id, await user.contextParams);
             user = await user.save();
         }
         if(user.password) {
@@ -65,15 +57,7 @@ module.exports.signInWithSlackResolver = async function (_, {code}, {IANATimezon
             fetchedUserInfo.availabilityProfile = defaultProfile.id;
             fetchedUserInfo.IANATimezone = IANATimezone;
             user = User(fetchedUserInfo);
-            await updateUserContextParams(user.id, {
-                startWorkTime: user.preferences.startWorkTime,
-                endWorkTime: user.preferences.endWorkTime,
-                lunchTime: user.preferences.lunchTime,
-                dailySetupTime: defaultProfile.dailySetupTime,
-                minAvailableSlotInMinutes: defaultProfile.minAvailableSlotInMinutes,
-                minFocusSlotInMinutes: defaultProfile.minFocusSlotInMinutes,
-                IANATimezone
-            });
+            await updateUserContextParams(user.id, await user.contextParams);
         }
         await updateSlackIntegrationForUser(user.id, slackIntegrationData);
         await user.save();

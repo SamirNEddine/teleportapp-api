@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const {verifyPassword} = require('../utils/authentication');
-const {getLocalTodayInUTCTimestamp} = require('../utils/timezone');
+const AvailabilityProfile = require('./AvailabilityProfile');
+
+const Schema = mongoose.Schema;
 
 /** User Preferences Schema **/
 //UserPreferences to be used in UserSchema
@@ -104,6 +105,20 @@ UserSchema.pre('save', async  function(next) {
         if (emailExist) throw (new Error("Email already exist!"));
     }
     next();
+});
+
+/** UserSchema virtual properties **/
+UserSchema.virtual('contextParams').get( async function() {
+    const availabilityProfile = await AvailabilityProfile.findById(this.availabilityProfile);
+    return {
+        startWorkTime: this.preferences.startWorkTime,
+        endWorkTime: this.preferences.endWorkTime,
+        lunchTime: this.preferences.lunchTime,
+        IANATimezone: this.IANATimezone,
+        dailySetupTime: availabilityProfile.dailySetupTime,
+        minAvailableSlotInMinutes: availabilityProfile.minAvailableSlotInMinutes,
+        minFocusSlotInMinutes: availabilityProfile.minFocusSlotInMinutes
+    }
 });
 
 /** Extend User model with helpers methods **/
