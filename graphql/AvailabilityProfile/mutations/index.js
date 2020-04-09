@@ -1,10 +1,17 @@
+const graphql = require('graphql');
 const {AvailabilityProfileType, inputFields} = require('../type');
 const {authenticatedResolver} = require('../../../utils/authentication');
 const {
     createAvailabilityProfileResolver,
     updateAvailabilityProfilePropertiesResolver,
-    updateAvailabilityProfilePropertiesWithProfileKeyResolver
+    updateAvailabilityProfilePropertiesWithProfileKeyResolver,
+    removeAvailabilityProfileResolver,
+    removeAvailabilityProfileForKeyResolver
 } = require('./resolvers');
+
+const {
+    GraphQLString
+} = graphql;
 
 /** Mutations definitions **/
 const createAvailabilityProfile = {
@@ -22,10 +29,22 @@ const updateAvailabilityProfilePropertiesWithProfileKey = {
     args: inputFields.updateAvailabilityProfilePropertiesWithProfileKey,
     resolve: authenticatedResolver(updateAvailabilityProfilePropertiesWithProfileKeyResolver)
 };
+const removeAvailabilityProfile = {
+    type: GraphQLString,
+    args: inputFields.removeAvailabilityProfile,
+    resolve: authenticatedResolver(removeAvailabilityProfileResolver)
+};
+const removeAvailabilityProfileForKey = {
+    type: GraphQLString,
+    args: inputFields.removeAvailabilityProfileForKey,
+    resolve: authenticatedResolver(removeAvailabilityProfileForKeyResolver)
+};
 
 /** Exports **/
 module.exports = {
     createAvailabilityProfile,
     updateAvailabilityProfileProperties,
-    updateAvailabilityProfilePropertiesWithProfileKey
+    updateAvailabilityProfilePropertiesWithProfileKey,
+    removeAvailabilityProfile,
+    removeAvailabilityProfileForKey
 };

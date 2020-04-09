@@ -21,7 +21,7 @@ module.exports.updateAvailabilityProfilePropertiesResolver = async function (_, 
         const {id} = availabilityProfileProperties;
         const profile = await AvailabilityProfile.findById(id);
         if(!profile){
-            throw(new Error('No profile found with the provided id!'));
+            throw(new Error('No profile found for the provided id!'));
         }else{
             const {key} = availabilityProfileProperties;
             if(key && key !== profile.key){
@@ -41,10 +41,36 @@ module.exports.updateAvailabilityProfilePropertiesWithProfileKeyResolver = async
         const {key} = availabilityProfileProperties;
         const profile = await AvailabilityProfile.findOne({key});
         if(!profile){
-            throw(new Error('No profile found with the provided key!'));
+            throw(new Error('No profile found for the provided key!'));
         }else{
             await profile.updateProperties(availabilityProfileProperties);
             return profile;
+        }
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.removeAvailabilityProfileResolver = async function (_, {id}) {
+    try {
+        const removedProfile = await AvailabilityProfile.findByIdAndDelete(id);
+        if(!removedProfile){
+            throw(new Error('No profile found for the provided id!'));
+        }else{
+            return "Profile deleted";
+        }
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.removeAvailabilityProfileForKeyResolver = async function (_, {key}) {
+    try {
+        const removedProfile = await AvailabilityProfile.findOneAndDelete({key});
+        if(!removedProfile){
+            throw(new Error('No profile found for the provided key!'));
+        }else{
+            return "Profile deleted";
         }
     }catch (error) {
         console.debug(error);

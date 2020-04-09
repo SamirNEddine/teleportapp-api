@@ -58,5 +58,11 @@ module.exports.inputFields = {
         name: {type: GraphQLString},
         minAvailableSlotInMinutes: {type: GraphQLInt},
         minFocusSlotInMinutes: {type: GraphQLInt}
+    },
+    removeAvailabilityProfile: {
+        id: {type: NonNull(GraphQLID)}
+    },
+    removeAvailabilityProfileForKey: {
+        key: {type: NonNull(GraphQLString)}
     }
 };
