@@ -1,5 +1,5 @@
 const {GraphQLString} = require('graphql');
-const {UserType, UserPreferencesType, inputFields} = require('../type');
+const {UserType, UserPreferencesType, TimeSlotType, inputFields} = require('../type');
 const {AvailabilityProfileType} = require('../../AvailabilityProfile');
 const {authenticatedResolver} = require('../../../utils/authentication');
 const {
@@ -12,7 +12,8 @@ const {
     addGoogleCalendarIntegrationResolver,
     updateRemainingAvailabilityResolver,
     getAndConfirmRemainingAvailabilityResolver,
-    updateAvailabilityProfileResolver
+    updateAvailabilityProfileResolver,
+    overrideCurrentAvailabilityResolver
 } = require('./resolvers');
 
 /** Mutations definitions **/
@@ -65,6 +66,11 @@ const getAndConfirmRemainingAvailability = {
     type: GraphQLString,
     resolve: authenticatedResolver(getAndConfirmRemainingAvailabilityResolver)
 };
+const overrideCurrentAvailability = {
+    type: TimeSlotType,
+    args: inputFields.overrideCurrentAvailability,
+    resolve: authenticatedResolver(overrideCurrentAvailabilityResolver)
+};
 
 /** Exports **/
 module.exports = {
@@ -77,5 +83,6 @@ module.exports = {
     updateAvailabilityProfile,
     addGoogleCalendarIntegration,
     updateRemainingAvailability,
-    getAndConfirmRemainingAvailability
+    getAndConfirmRemainingAvailability,
+    overrideCurrentAvailability
 };

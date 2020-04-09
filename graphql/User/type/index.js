@@ -19,7 +19,7 @@ const {
 } = graphql;
 
 /** Nested TimeSlot type **/
-const TimeSlotType = new GraphQLObjectType({
+const TimeSlotType = module.exports.TimeSlotType = new GraphQLObjectType({
     name: 'TimeSlot',
     fields: () => ({
         start: {
@@ -175,5 +175,8 @@ module.exports.inputFields = {
     },
     updateRemainingAvailability: {
         timeSlots: {type: NonNull(GraphQLList(TimeSlotInputType))}
+    },
+    overrideCurrentAvailability: {
+        newAvailability: {type: NonNull(GraphQLString)}
     }
 };
