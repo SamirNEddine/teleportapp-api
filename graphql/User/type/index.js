@@ -1,6 +1,7 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
 const {SkillType} = require('../../Skill');
+const {AvailabilityProfileType} = require('../../AvailabilityProfile');
 const {
     nestedUserSkillsResolver,
     nestedRemainingAvailabilityResolver,
@@ -66,25 +67,6 @@ const UserPreferencesType = module.exports.UserPreferencesType = new GraphQLObje
             type: NonNull(GraphQLString)
         },
         lunchTime: {
-            type: NonNull(GraphQLString)
-        }
-    })
-});
-
-/** Nested UserProfile type **/
-const AvailabilityProfileType = module.exports.AvailabilityProfileType = new GraphQLObjectType({
-    name: 'AvailabilityProfile',
-    fields: () => ({
-        name: {
-            type: NonNull(GraphQLString)
-        },
-        key: {
-            type: NonNull(GraphQLString)
-        },
-        minAvailableSlotInMinutes: {
-            type: NonNull(GraphQLString)
-        },
-        minFocusSlotInMinutes: {
             type: NonNull(GraphQLString)
         }
     })

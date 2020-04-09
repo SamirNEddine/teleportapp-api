@@ -1,5 +1,6 @@
 const {GraphQLString} = require('graphql');
-const {UserType, UserPreferencesType, AvailabilityProfileType, inputFields} = require('../type');
+const {UserType, UserPreferencesType, inputFields} = require('../type');
+const {AvailabilityProfileType} = require('../../AvailabilityProfile');
 const {authenticatedResolver} = require('../../../utils/authentication');
 const {
     signInWithEmailResolver,
