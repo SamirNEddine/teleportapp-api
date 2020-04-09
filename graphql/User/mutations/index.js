@@ -1,5 +1,5 @@
 const {GraphQLString} = require('graphql');
-const {UserType, UserPreferences, inputFields} = require('../type');
+const {UserType, UserPreferencesType, inputFields} = require('../type');
 const {authenticatedResolver} = require('../../../utils/authentication');
 const {
     signInWithEmailResolver,
@@ -41,7 +41,7 @@ const updateUserProfile = {
     resolve: authenticatedResolver(updateUserProfileResolver)
 };
 const updateUserPreferences = {
-    type: UserPreferences,
+    type: UserPreferencesType,
     args: inputFields.updateUserPreferences,
     resolve: authenticatedResolver(updateUserPreferencesResolver)
 };

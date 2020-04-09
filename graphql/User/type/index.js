@@ -12,7 +12,7 @@ const {
 } = graphql;
 
 /** Nested TimeSlot type **/
-const TimeSlot = new GraphQLObjectType({
+const TimeSlotType = new GraphQLObjectType({
     name: 'TimeSlot',
     fields: () => ({
         start: {
@@ -32,22 +32,22 @@ const AvailabilityType = new GraphQLObjectType({
     name: 'Availability',
     fields: () => ({
         busyTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         },
         focusTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         },
         availableTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         },
         unassignedTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         }
     })
 });
 
 /** Nested UserPreferences type **/
-const UserPreferences = module.exports.UserPreferences = new GraphQLObjectType({
+const UserPreferencesType = module.exports.UserPreferencesType = new GraphQLObjectType({
     name: 'Preferences',
     fields: () => ({
         startWorkTime: {
@@ -65,6 +65,24 @@ const UserPreferences = module.exports.UserPreferences = new GraphQLObjectType({
     })
 });
 
+/** Nested UserProfile type **/
+const AvailabilityProfileType = module.exports.UserPreferences = new GraphQLObjectType({
+    name: 'Availability Profile',
+    fields: () => ({
+        name: {
+            type: NonNull(GraphQLString)
+        },
+        key: {
+            type: NonNull(GraphQLString)
+        },
+        minAvailableSlotInMinutes: {
+            type: NonNull(GraphQLString)
+        },
+        minFocusSlotInMinutes: {
+            type: NonNull(GraphQLString)
+        }
+    })
+});
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
@@ -94,7 +112,7 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedUserSkillsResolver
         },
         currentAvailability: {
-            type: TimeSlot,
+            type: TimeSlotType,
             resolve: nestedCurrentAvailabilityResolver
         },
         remainingAvailability: {
@@ -106,19 +124,22 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedSuggestedAvailabilityResolver
         },
         preferences: {
-            type: UserPreferences
+            type: NonNull(UserPreferencesType)
         },
         accessToken: {
-            type: GraphQLString
+            type: NonNull(GraphQLString)
         },
         refreshToken: {
-            type: GraphQLString
+            type: NonNull(GraphQLString)
+        },
+        availabilityProfile: {
+            type: NonNull(AvailabilityProfileType)
         }
     })
 });
 
 /** Input fields for queries and mutations **/
-const TimeSlotInput = new GraphQLInputObjectType({
+const TimeSlotInputType = new GraphQLInputObjectType({
     name: 'TimeSlotInput',
     fields: () => ({
         start: {
@@ -164,6 +185,6 @@ module.exports.inputFields = {
         code: {type: NonNull(GraphQLString)}
     },
     updateRemainingAvailability: {
-        timeSlots: {type: NonNull(GraphQLList(TimeSlotInput))}
+        timeSlots: {type: NonNull(GraphQLList(TimeSlotInputType))}
     }
 };
