@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const {verifyPassword} = require('../utils/authentication');
 const AvailabilityProfile = require('./AvailabilityProfile');
+const {updateUserContextParams} = require('../helpers/contextService');
 
 const Schema = mongoose.Schema;
 
@@ -17,9 +18,21 @@ const getStartWorkTime = function (startWorkTime) {
     }
     return startWorkTime;
 };
+const setStartWorkTime = function (startWorkTime) {
+    if(!parseInt(startWorkTime)){
+        return this.startWorkTime;
+    }
+    return startWorkTime;
+};
 const getEndWorkTime = function (endWorkTime) {
     if(!parseInt(endWorkTime)){
         return DEFAULT_END_WORK_TIME;
+    }
+    return endWorkTime;
+};
+const setEndWorkTime = function (endWorkTime) {
+    if(!parseInt(endWorkTime)){
+        return this.endWorkTime;
     }
     return endWorkTime;
 };
@@ -29,28 +42,44 @@ const getDailySetupTime = function (dailySetupTime) {
     }
     return dailySetupTime;
 };
+const setDailySetupTime = function (dailySetupTime) {
+    if(!parseInt(dailySetupTime)){
+        return this.dailySetupTime;
+    }
+    return dailySetupTime;
+};
 const getLunchTime = function (lunchTime) {
     if(!parseInt(lunchTime)){
         return DEFAULT_LUNCH_TIME;
     }
     return lunchTime;
 };
+const setLunchTime = function (lunchTime) {
+    if(!parseInt(lunchTime)){
+        return this.lunchTime;
+    }
+    return lunchTime;
+};
 const UserPreferences = Schema ({
     startWorkTime: {
         type: String,
-        get: getStartWorkTime
+        get: getStartWorkTime,
+        set: setStartWorkTime
     },
     endWorkTime: {
         type: String,
-        get: getEndWorkTime
+        get: getEndWorkTime,
+        set: setEndWorkTime
     },
     dailySetupTime: {
         type: String,
-        get: getDailySetupTime
+        get: getDailySetupTime,
+        set: setDailySetupTime
     },
     lunchTime: {
         type: String,
-        get: getLunchTime
+        get: getLunchTime,
+        set: setLunchTime
     }
 });
 UserPreferences.set('toObject', { getters: true });
@@ -126,6 +155,15 @@ const User = new mongoose.model('user', UserSchema);
 
 User.prototype.verifyPassword = async function(password) {
     return await verifyPassword(password, this.password);
+};
+User.prototype.updateUserPreferences = async function(preferencesUpdates) {
+    await updateUserContextParams(this.id, preferencesUpdates);
+    for (let preferenceKey in preferencesUpdates){
+        if(this.preferences.get(preferenceKey)){
+            this.preferences.set(preferenceKey, preferencesUpdates[preferenceKey]);
+        }
+    }
+    await this.save();
 };
 
 /** Export **/

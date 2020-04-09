@@ -97,13 +97,11 @@ module.exports.updateUserProfileResolver = async function (_, {firstName, lastNa
 };
 module.exports.updateUserPreferencesResolver = async function(_, preferences, {jwtUser}) {
     try {
-        const user = await User.findOneAndUpdate(
-            {_id: jwtUser.id},
-            {preferences},
-            {new: true});
+        const user = await User.findById(jwtUser.id);
         if(!user) {
             //Shouldn't happen?
         }else{
+            await user.updateUserPreferences(preferences);
             return user.preferences;
         }
     }catch (error) {
