@@ -1,7 +1,13 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
 const {SkillType} = require('../../Skill');
-const {nestedUserSkillsResolver, nestedRemainingAvailabilityResolver, nestedSuggestedAvailabilityResolver, nestedCurrentAvailabilityResolver} = require('./nestedResolvers');
+const {
+    nestedUserSkillsResolver,
+    nestedRemainingAvailabilityResolver,
+    nestedSuggestedAvailabilityResolver,
+    nestedCurrentAvailabilityResolver,
+    nestedAvailabilityProfileResolver
+} = require('./nestedResolvers');
 const {
     GraphQLObjectType,
     GraphQLInputObjectType,
@@ -133,7 +139,8 @@ module.exports.UserType = new GraphQLObjectType({
             type: NonNull(GraphQLString)
         },
         availabilityProfile: {
-            type: NonNull(AvailabilityProfileType)
+            type: NonNull(AvailabilityProfileType),
+            resolve: nestedAvailabilityProfileResolver
         }
     })
 });
