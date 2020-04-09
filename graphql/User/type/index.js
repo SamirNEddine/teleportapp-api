@@ -67,7 +67,7 @@ const UserPreferencesType = module.exports.UserPreferencesType = new GraphQLObje
 
 /** Nested UserProfile type **/
 const AvailabilityProfileType = module.exports.UserPreferences = new GraphQLObjectType({
-    name: 'Availability Profile',
+    name: 'AvailabilityProfile',
     fields: () => ({
         name: {
             type: NonNull(GraphQLString)
