@@ -1,7 +1,6 @@
 const User = require('../../../model/User');
 const AvailabilityProfile = require('../../../model/AvailabilityProfile');
 const nameFromEmail = require('../../../utils/nameFromEmail');
-const {getTimestampFromLocalTodayTime} = require("../../../utils/timezone");
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
@@ -34,7 +33,6 @@ module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IAN
         throw(error);
     }
 };
-
 module.exports.authWithTemporaryCodeResolver = async function (_, {emailAddress, code}) {
     try {
         await verifyTemporaryAccessCode(emailAddress, code);
@@ -96,14 +94,32 @@ module.exports.updateUserProfileResolver = async function (_, {firstName, lastNa
         throw(error);
     }
 };
-module.exports.updateAvailabilityLevelResolver = async function (_, {level}, {jwtUser}) {
+module.exports.updateUserPreferencesResolver = async function(_, preferences, {jwtUser}) {
     try {
         const user = await User.findById(jwtUser.id);
-        const slackIntegrationData = user.getIntegrationData('slack');
-        await updateUserStatus(slackIntegrationData, level);
-        const googleIntegrationData = user.getIntegrationData('google');
-        await createCalendarEvent(googleIntegrationData);
-        return 'OK';
+        if(!user) {
+            //Shouldn't happen?
+        }else{
+            await user.updateUserPreferences(preferences);
+            return user.preferences;
+        }
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.updateAvailabilityProfileResolver = async function(_, {availabilityProfileId}, {jwtUser}) {
+    try {
+        const user = await User.findById(jwtUser.id);
+        if(user.availabilityProfile !== availabilityProfileId){
+            const newAvailabilityProfile = await AvailabilityProfile.findById(availabilityProfileId);
+            if(newAvailabilityProfile){
+                user.availabilityProfile = availabilityProfileId;
+                await updateUserContextParams(user.id, await user.contextParams);
+                await user.save();
+            }
+        }
+        return await AvailabilityProfile.findById(user.availabilityProfile);
     }catch (error) {
         console.debug(error);
         throw(error);
@@ -131,9 +147,6 @@ module.exports.updateRemainingAvailabilityResolver = async function (_, {timeSlo
 module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, args, {jwtUser, IANATimezone}) {
     try {
         const user = await User.findById(jwtUser.id);
-        const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, IANATimezone);
-        const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, IANATimezone);
-        //To do: Get User profile values here
         const availability = await getSuggestedAvailabilityForUser(user.id);
         await updateRemainingAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
         return 'OK';

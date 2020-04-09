@@ -1,7 +1,14 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
 const {SkillType} = require('../../Skill');
-const {nestedUserSkillsResolver, nestedRemainingAvailabilityResolver, nestedSuggestedAvailabilityResolver, nestedCurrentAvailabilityResolver} = require('./nestedResolvers');
+const {AvailabilityProfileType} = require('../../AvailabilityProfile');
+const {
+    nestedUserSkillsResolver,
+    nestedRemainingAvailabilityResolver,
+    nestedSuggestedAvailabilityResolver,
+    nestedCurrentAvailabilityResolver,
+    nestedAvailabilityProfileResolver
+} = require('./nestedResolvers');
 const {
     GraphQLObjectType,
     GraphQLInputObjectType,
@@ -12,7 +19,7 @@ const {
 } = graphql;
 
 /** Nested TimeSlot type **/
-const TimeSlot = new GraphQLObjectType({
+const TimeSlotType = new GraphQLObjectType({
     name: 'TimeSlot',
     fields: () => ({
         start: {
@@ -32,22 +39,22 @@ const AvailabilityType = new GraphQLObjectType({
     name: 'Availability',
     fields: () => ({
         busyTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         },
         focusTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         },
         availableTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         },
         unassignedTimeSlots: {
-            type: GraphQLList(TimeSlot)
+            type: GraphQLList(TimeSlotType)
         }
     })
 });
 
 /** Nested UserPreferences type **/
-const UserPreferences = new GraphQLObjectType({
+const UserPreferencesType = module.exports.UserPreferencesType = new GraphQLObjectType({
     name: 'Preferences',
     fields: () => ({
         startWorkTime: {
@@ -57,6 +64,9 @@ const UserPreferences = new GraphQLObjectType({
             type: NonNull(GraphQLString)
         },
         dailySetupTime: {
+            type: NonNull(GraphQLString)
+        },
+        lunchTime: {
             type: NonNull(GraphQLString)
         }
     })
@@ -90,7 +100,7 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedUserSkillsResolver
         },
         currentAvailability: {
-            type: TimeSlot,
+            type: TimeSlotType,
             resolve: nestedCurrentAvailabilityResolver
         },
         remainingAvailability: {
@@ -102,19 +112,23 @@ module.exports.UserType = new GraphQLObjectType({
             resolve: nestedSuggestedAvailabilityResolver
         },
         preferences: {
-            type: UserPreferences
+            type: NonNull(UserPreferencesType)
         },
         accessToken: {
-            type: GraphQLString
+            type: NonNull(GraphQLString)
         },
         refreshToken: {
-            type: GraphQLString
+            type: NonNull(GraphQLString)
+        },
+        availabilityProfile: {
+            type: NonNull(AvailabilityProfileType),
+            resolve: nestedAvailabilityProfileResolver
         }
     })
 });
 
 /** Input fields for queries and mutations **/
-const TimeSlotInput = new GraphQLInputObjectType({
+const TimeSlotInputType = new GraphQLInputObjectType({
     name: 'TimeSlotInput',
     fields: () => ({
         start: {
@@ -147,13 +161,19 @@ module.exports.inputFields = {
         firstName: {type: NonNull(GraphQLString)},
         lastName: {type: NonNull(GraphQLString)}
     },
-    updateAvailabilityLevel: {
-        level: {type: NonNull(GraphQLInt)}
+    updateUserPreferences: {
+        startWorkTime: {type: GraphQLString},
+        endWorkTime: {type: GraphQLString},
+        lunchTime: {type: GraphQLString},
+        dailySetupTime: {type: GraphQLString}
+    },
+    updateAvailabilityProfile: {
+        availabilityProfileId: {type: GraphQLString},
     },
     addGoogleCalendarIntegration: {
         code: {type: NonNull(GraphQLString)}
     },
     updateRemainingAvailability: {
-        timeSlots: {type: NonNull(GraphQLList(TimeSlotInput))}
+        timeSlots: {type: NonNull(GraphQLList(TimeSlotInputType))}
     }
 };
