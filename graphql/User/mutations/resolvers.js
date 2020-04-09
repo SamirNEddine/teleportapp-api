@@ -34,7 +34,6 @@ module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IAN
         throw(error);
     }
 };
-
 module.exports.authWithTemporaryCodeResolver = async function (_, {emailAddress, code}) {
     try {
         await verifyTemporaryAccessCode(emailAddress, code);
@@ -90,6 +89,22 @@ module.exports.updateUserProfileResolver = async function (_, {firstName, lastNa
         if(!user) {
         }else{
             return user;
+        }
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.updateUserPreferencesResolver = async function(_, preferences, {jwtUser}) {
+    try {
+        const user = await User.findOneAndUpdate(
+            {_id: jwtUser.id},
+            {preferences},
+            {new: true});
+        if(!user) {
+            //Shouldn't happen?
+        }else{
+            return user.preferences;
         }
     }catch (error) {
         console.debug(error);

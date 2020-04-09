@@ -47,7 +47,7 @@ const AvailabilityType = new GraphQLObjectType({
 });
 
 /** Nested UserPreferences type **/
-const UserPreferences = new GraphQLObjectType({
+const UserPreferences = module.exports.UserPreferences = new GraphQLObjectType({
     name: 'Preferences',
     fields: () => ({
         startWorkTime: {
@@ -64,6 +64,7 @@ const UserPreferences = new GraphQLObjectType({
         }
     })
 });
+
 
 /** Type definition **/
 //Exports soon enough to overcome circular dependencies issues
@@ -149,6 +150,12 @@ module.exports.inputFields = {
     updateUserProfile: {
         firstName: {type: NonNull(GraphQLString)},
         lastName: {type: NonNull(GraphQLString)}
+    },
+    updateUserPreferences: {
+        startWorkTime: {type: GraphQLString},
+        endWorkTime: {type: GraphQLString},
+        lunchTime: {type: GraphQLString},
+        dailySetupTime: {type: GraphQLString}
     },
     updateAvailabilityLevel: {
         level: {type: NonNull(GraphQLInt)}
