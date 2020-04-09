@@ -58,6 +58,9 @@ const UserPreferences = new GraphQLObjectType({
         },
         dailySetupTime: {
             type: NonNull(GraphQLString)
+        },
+        lunchTime: {
+            type: NonNull(GraphQLString)
         }
     })
 });
