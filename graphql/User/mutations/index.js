@@ -8,7 +8,6 @@ const {
     updateUserProfileResolver,
     signInWithSlackResolver,
     refreshAccessTokenResolver,
-    updateAvailabilityLevelResolver,
     updateUserPreferencesResolver,
     addGoogleCalendarIntegrationResolver,
     updateRemainingAvailabilityResolver,
@@ -52,11 +51,6 @@ const updateAvailabilityProfile = {
     args: inputFields.updateAvailabilityProfile,
     resolve: authenticatedResolver(updateAvailabilityProfileResolver)
 };
-const updateAvailabilityLevel = {
-    type: GraphQLString,
-    args: inputFields.updateAvailabilityLevel,
-    resolve: authenticatedResolver(updateAvailabilityLevelResolver)
-};
 const addGoogleCalendarIntegration = {
     type: GraphQLString,
     args: inputFields.addGoogleCalendarIntegration,
@@ -81,7 +75,6 @@ module.exports = {
     updateUserProfile,
     updateUserPreferences,
     updateAvailabilityProfile,
-    updateAvailabilityLevel,
     addGoogleCalendarIntegration,
     updateRemainingAvailability,
     getAndConfirmRemainingAvailability

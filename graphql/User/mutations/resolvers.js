@@ -1,7 +1,6 @@
 const User = require('../../../model/User');
 const AvailabilityProfile = require('../../../model/AvailabilityProfile');
 const nameFromEmail = require('../../../utils/nameFromEmail');
-const {getTimestampFromLocalTodayTime} = require("../../../utils/timezone");
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
 const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
@@ -109,19 +108,6 @@ module.exports.updateUserPreferencesResolver = async function(_, preferences, {j
         throw(error);
     }
 };
-module.exports.updateAvailabilityLevelResolver = async function (_, {level}, {jwtUser}) {
-    try {
-        const user = await User.findById(jwtUser.id);
-        const slackIntegrationData = user.getIntegrationData('slack');
-        await updateUserStatus(slackIntegrationData, level);
-        const googleIntegrationData = user.getIntegrationData('google');
-        await createCalendarEvent(googleIntegrationData);
-        return 'OK';
-    }catch (error) {
-        console.debug(error);
-        throw(error);
-    }
-};
 module.exports.updateAvailabilityProfileResolver = async function(_, {availabilityProfileId}, {jwtUser}) {
     try {
         const user = await User.findById(jwtUser.id);
@@ -161,9 +147,6 @@ module.exports.updateRemainingAvailabilityResolver = async function (_, {timeSlo
 module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, args, {jwtUser, IANATimezone}) {
     try {
         const user = await User.findById(jwtUser.id);
-        const startTimestamp = getTimestampFromLocalTodayTime(user.preferences.startWorkTime, IANATimezone);
-        const endTimestamp = getTimestampFromLocalTodayTime(user.preferences.endWorkTime, IANATimezone);
-        //To do: Get User profile values here
         const availability = await getSuggestedAvailabilityForUser(user.id);
         await updateRemainingAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
         return 'OK';
