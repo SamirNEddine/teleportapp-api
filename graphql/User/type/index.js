@@ -185,6 +185,9 @@ module.exports.inputFields = {
         lunchTime: {type: GraphQLString},
         dailySetupTime: {type: GraphQLString}
     },
+    updateAvailabilityProfile: {
+        availabilityProfileId: {type: GraphQLString},
+    },
     updateAvailabilityLevel: {
         level: {type: NonNull(GraphQLInt)}
     },

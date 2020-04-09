@@ -1,5 +1,5 @@
 const {GraphQLString} = require('graphql');
-const {UserType, UserPreferencesType, inputFields} = require('../type');
+const {UserType, UserPreferencesType, AvailabilityProfileType, inputFields} = require('../type');
 const {authenticatedResolver} = require('../../../utils/authentication');
 const {
     signInWithEmailResolver,
@@ -11,7 +11,8 @@ const {
     updateUserPreferencesResolver,
     addGoogleCalendarIntegrationResolver,
     updateRemainingAvailabilityResolver,
-    getAndConfirmRemainingAvailabilityResolver
+    getAndConfirmRemainingAvailabilityResolver,
+    updateAvailabilityProfileResolver
 } = require('./resolvers');
 
 /** Mutations definitions **/
@@ -45,6 +46,11 @@ const updateUserPreferences = {
     args: inputFields.updateUserPreferences,
     resolve: authenticatedResolver(updateUserPreferencesResolver)
 };
+const updateAvailabilityProfile = {
+    type: AvailabilityProfileType,
+    args: inputFields.updateAvailabilityProfile,
+    resolve: authenticatedResolver(updateAvailabilityProfileResolver)
+};
 const updateAvailabilityLevel = {
     type: GraphQLString,
     args: inputFields.updateAvailabilityLevel,
@@ -73,6 +79,7 @@ module.exports = {
     refreshAccessToken,
     updateUserProfile,
     updateUserPreferences,
+    updateAvailabilityProfile,
     updateAvailabilityLevel,
     addGoogleCalendarIntegration,
     updateRemainingAvailability,

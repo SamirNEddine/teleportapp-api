@@ -122,6 +122,23 @@ module.exports.updateAvailabilityLevelResolver = async function (_, {level}, {jw
         throw(error);
     }
 };
+module.exports.updateAvailabilityProfileResolver = async function(_, {availabilityProfileId}, {jwtUser}) {
+    try {
+        const user = await User.findById(jwtUser.id);
+        if(user.availabilityProfile !== availabilityProfileId){
+            const newAvailabilityProfile = await AvailabilityProfile.findById(availabilityProfileId);
+            if(newAvailabilityProfile){
+                user.availabilityProfile = availabilityProfileId;
+                await updateUserContextParams(user.id, await user.contextParams);
+                await user.save();
+            }
+        }
+        return await AvailabilityProfile.findById(user.availabilityProfile);
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
 module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code}, {jwtUser}) {
     try {
         const googleIntegrationData = await authorizeCalendarAccess(code);
