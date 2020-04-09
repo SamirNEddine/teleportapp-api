@@ -3,7 +3,8 @@ const { NonNull } = require('../../../utils/graphql');
 const {
     GraphQLObjectType,
     GraphQLID,
-    GraphQLString
+    GraphQLString,
+    GraphQLInt
 } = graphql;
 
 /** Type definition **/
@@ -21,10 +22,10 @@ module.exports.AvailabilityProfileType = new GraphQLObjectType({
             type: NonNull(GraphQLString)
         },
         minAvailableSlotInMinutes: {
-            type: NonNull(GraphQLString)
+            type: NonNull(GraphQLInt)
         },
         minFocusSlotInMinutes: {
-            type: NonNull(GraphQLString)
+            type: NonNull(GraphQLInt)
         }
     })
 });
@@ -40,12 +41,22 @@ module.exports.inputFields = {
     },
     //Mutations
     createAvailabilityProfile: {
-
+        key: {type: NonNull(GraphQLString)},
+        name: {type: NonNull(GraphQLString)},
+        minAvailableSlotInMinutes: {type: NonNull(GraphQLInt)},
+        minFocusSlotInMinutes: {type: NonNull(GraphQLInt)}
     },
     updateAvailabilityProfileProperties: {
-
+        id: {type: NonNull(GraphQLID)},
+        key: {type: GraphQLString},
+        name: {type: GraphQLString},
+        minAvailableSlotInMinutes: {type: GraphQLInt},
+        minFocusSlotInMinutes: {type: GraphQLInt}
     },
     updateAvailabilityProfilePropertiesWithProfileKey: {
-
+        key: {type: NonNull(GraphQLString)},
+        name: {type: GraphQLString},
+        minAvailableSlotInMinutes: {type: GraphQLInt},
+        minFocusSlotInMinutes: {type: GraphQLInt}
     }
 };
