@@ -170,9 +170,6 @@ module.exports.inputFields = {
     updateAvailabilityProfile: {
         availabilityProfileId: {type: GraphQLString},
     },
-    updateAvailabilityLevel: {
-        level: {type: NonNull(GraphQLInt)}
-    },
     addGoogleCalendarIntegration: {
         code: {type: NonNull(GraphQLString)}
     },
