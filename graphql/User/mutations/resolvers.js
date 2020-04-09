@@ -3,9 +3,16 @@ const AvailabilityProfile = require('../../../model/AvailabilityProfile');
 const nameFromEmail = require('../../../utils/nameFromEmail');
 const {sendTemporaryAccessCode} = require('../../../utils/sendgrid');
 const {generateTemporaryAccessCode, verifyTemporaryAccessCode, getJWTAccessTokenForUser, getJWTRefreshTokenForUser, getPayloadFromJWTRefreshToken} = require('../../../utils/authentication');
-const {signInWithSlack, fetchUserInfoFromSlack, updateUserStatus} = require ('../../../utils/slack');
-const {authorizeCalendarAccess, createCalendarEvent} = require('../../../utils/google');
-const {updateSlackIntegrationForUser, updateGoogleIntegrationForUser, updateRemainingAvailabilityForUser, getSuggestedAvailabilityForUser, updateUserContextParams} = require('../../../helpers/contextService');
+const {signInWithSlack, fetchUserInfoFromSlack} = require ('../../../utils/slack');
+const {authorizeCalendarAccess} = require('../../../utils/google');
+const {
+    updateSlackIntegrationForUser,
+    updateGoogleIntegrationForUser,
+    updateRemainingAvailabilityForUser,
+    getSuggestedAvailabilityForUser,
+    updateUserContextParams,
+    setCurrentAvailabilityForUser
+} = require('../../../helpers/contextService');
 
 const DEFAULT_AVAILABILITY_PROFILE_KEY = 'notBusy';
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
@@ -150,6 +157,14 @@ module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, a
         const availability = await getSuggestedAvailabilityForUser(user.id);
         await updateRemainingAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
         return 'OK';
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.overrideCurrentAvailabilityResolver = async function (_, {newAvailability}, {jwtUser}) {
+    try {
+        return await setCurrentAvailabilityForUser(jwtUser.id, newAvailability);
     }catch (error) {
         console.debug(error);
         throw(error);
