@@ -155,8 +155,7 @@ module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, a
     try {
         const user = await User.findById(jwtUser.id);
         const availability = await getSuggestedAvailabilityForUser(user.id);
-        await scheduleTodayAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
-        return 'OK';
+        return await scheduleTodayAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
     }catch (error) {
         console.debug(error);
         throw(error);
