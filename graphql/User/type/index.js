@@ -13,7 +13,7 @@ const {
     GraphQLObjectType,
     GraphQLInputObjectType,
     GraphQLID,
-    GraphQLString
+    GraphQLString,
     GraphQLList
 } = graphql;
 
