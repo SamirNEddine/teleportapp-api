@@ -4,8 +4,8 @@ const {SkillType} = require('../../Skill');
 const {AvailabilityProfileType} = require('../../AvailabilityProfile');
 const {
     nestedUserSkillsResolver,
-    nestedRemainingAvailabilityResolver,
-    nestedSuggestedAvailabilityResolver,
+    nestedTodayAvailabilityResolver,
+    nestedSuggestedAvailabilityForTodayResolver,
     nestedCurrentAvailabilityResolver,
     nestedAvailabilityProfileResolver
 } = require('./nestedResolvers');
@@ -14,7 +14,6 @@ const {
     GraphQLInputObjectType,
     GraphQLID,
     GraphQLString,
-    GraphQLInt,
     GraphQLList
 } = graphql;
 
@@ -103,13 +102,13 @@ module.exports.UserType = new GraphQLObjectType({
             type: TimeSlotType,
             resolve: nestedCurrentAvailabilityResolver
         },
-        remainingAvailability: {
+        todayAvailability: {
             type: AvailabilityType,
-            resolve: nestedRemainingAvailabilityResolver
+            resolve: nestedTodayAvailabilityResolver
         },
-        suggestedAvailability: {
+        suggestedAvailabilityForToday: {
             type: AvailabilityType,
-            resolve: nestedSuggestedAvailabilityResolver
+            resolve: nestedSuggestedAvailabilityForTodayResolver
         },
         preferences: {
             type: NonNull(UserPreferencesType)
@@ -173,7 +172,7 @@ module.exports.inputFields = {
     addGoogleCalendarIntegration: {
         code: {type: NonNull(GraphQLString)}
     },
-    updateRemainingAvailability: {
+    scheduleAvailabilityForToday: {
         timeSlots: {type: NonNull(GraphQLList(TimeSlotInputType))}
     },
     overrideCurrentAvailability: {

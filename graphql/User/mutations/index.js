@@ -10,7 +10,7 @@ const {
     refreshAccessTokenResolver,
     updateUserPreferencesResolver,
     addGoogleCalendarIntegrationResolver,
-    updateRemainingAvailabilityResolver,
+    scheduleAvailabilityForTodayResolver,
     getAndConfirmRemainingAvailabilityResolver,
     updateAvailabilityProfileResolver,
     overrideCurrentAvailabilityResolver
@@ -57,10 +57,10 @@ const addGoogleCalendarIntegration = {
     args: inputFields.addGoogleCalendarIntegration,
     resolve: authenticatedResolver(addGoogleCalendarIntegrationResolver)
 };
-const updateRemainingAvailability = {
+const scheduleAvailabilityForToday = {
     type: GraphQLString,
-    args: inputFields.updateRemainingAvailability,
-    resolve: authenticatedResolver(updateRemainingAvailabilityResolver)
+    args: inputFields.scheduleAvailabilityForToday,
+    resolve: authenticatedResolver(scheduleAvailabilityForTodayResolver)
 };
 const getAndConfirmRemainingAvailability = {
     type: GraphQLString,
@@ -82,7 +82,7 @@ module.exports = {
     updateUserPreferences,
     updateAvailabilityProfile,
     addGoogleCalendarIntegration,
-    updateRemainingAvailability,
+    scheduleAvailabilityForToday,
     getAndConfirmRemainingAvailability,
     overrideCurrentAvailability
 };
