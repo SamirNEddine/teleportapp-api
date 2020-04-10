@@ -4,7 +4,7 @@ const {SkillType} = require('../../Skill');
 const {AvailabilityProfileType} = require('../../AvailabilityProfile');
 const {
     nestedUserSkillsResolver,
-    nestedRemainingAvailabilityForTodayResolver,
+    nestedTodayAvailabilityResolver,
     nestedSuggestedAvailabilityForTodayResolver,
     nestedCurrentAvailabilityResolver,
     nestedAvailabilityProfileResolver
@@ -102,9 +102,9 @@ module.exports.UserType = new GraphQLObjectType({
             type: TimeSlotType,
             resolve: nestedCurrentAvailabilityResolver
         },
-        remainingAvailabilityForToday: {
+        todayAvailability: {
             type: AvailabilityType,
-            resolve: nestedRemainingAvailabilityForTodayResolver
+            resolve: nestedTodayAvailabilityResolver
         },
         suggestedAvailabilityForToday: {
             type: AvailabilityType,

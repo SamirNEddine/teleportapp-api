@@ -27,7 +27,7 @@ const updateIntegrationForUser = async function (userId, name, data) {
         throw ApiError.INTERNAL_SERVER_ERROR();
     }
 };
-const getRemainingAvailabilityForUser = async function (userId) {
+const getTodayAvailabilityForUser = async function (userId) {
     const request = {
         method: "GET",
         url: `${contextServiceAPIBaseURL}/availability/remaining?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}`
@@ -85,7 +85,7 @@ const setCurrentAvailabilityForUser = async function (userId, newAvailability) {
     }
     return response.data;
 };
-const updateRemainingAvailabilityForUser = async function (userId, timeSlots) {
+const scheduleTodayAvailabilityForUser = async function (userId, timeSlots) {
     const request = {
         method: "POST",
         url: `${contextServiceAPIBaseURL}/availability/remaining`,
@@ -136,9 +136,9 @@ module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = a
 module.exports.updateGoogleIntegrationForUser = updateGoogleIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'google', data);
 };
-module.exports.getRemainingAvailabilityForUser = getRemainingAvailabilityForUser;
+module.exports.getTodayAvailabilityForUser = getTodayAvailabilityForUser;
 module.exports.getSuggestedAvailabilityForUser = getSuggestedAvailabilityForUser;
 module.exports.getCurrentAvailabilityForUser = getCurrentAvailabilityForUser;
 module.exports.setCurrentAvailabilityForUser = setCurrentAvailabilityForUser;
-module.exports.updateRemainingAvailabilityForUser = updateRemainingAvailabilityForUser;
+module.exports.scheduleTodayAvailabilityForUser = scheduleTodayAvailabilityForUser;
 module.exports.updateUserContextParams = updateUserContextParams;

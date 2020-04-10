@@ -8,7 +8,7 @@ const {authorizeCalendarAccess} = require('../../../utils/google');
 const {
     updateSlackIntegrationForUser,
     updateGoogleIntegrationForUser,
-    updateRemainingAvailabilityForUser,
+    scheduleTodayAvailabilityForUser,
     getSuggestedAvailabilityForUser,
     updateUserContextParams,
     setCurrentAvailabilityForUser
@@ -144,7 +144,7 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code},
 };
 module.exports.scheduleAvailabilityForTodayResolver = async function (_, {timeSlots}, {jwtUser}) {
     try {
-        await updateRemainingAvailabilityForUser(jwtUser.id, timeSlots);
+        await scheduleTodayAvailabilityForUser(jwtUser.id, timeSlots);
         return 'OK';
     }catch (error) {
         console.debug(error);
@@ -155,7 +155,7 @@ module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, a
     try {
         const user = await User.findById(jwtUser.id);
         const availability = await getSuggestedAvailabilityForUser(user.id);
-        await updateRemainingAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
+        await scheduleTodayAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
         return 'OK';
     }catch (error) {
         console.debug(error);
