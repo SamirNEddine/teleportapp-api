@@ -172,7 +172,7 @@ module.exports.inputFields = {
     addGoogleCalendarIntegration: {
         code: {type: NonNull(GraphQLString)}
     },
-    updateRemainingAvailability: {
+    scheduleAvailabilityForToday: {
         timeSlots: {type: NonNull(GraphQLList(TimeSlotInputType))}
     },
     overrideCurrentAvailability: {

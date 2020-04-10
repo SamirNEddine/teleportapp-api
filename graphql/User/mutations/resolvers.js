@@ -142,7 +142,7 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code},
         throw(error);
     }
 };
-module.exports.updateRemainingAvailabilityResolver = async function (_, {timeSlots}, {jwtUser}) {
+module.exports.scheduleAvailabilityForTodayResolver = async function (_, {timeSlots}, {jwtUser}) {
     try {
         await updateRemainingAvailabilityForUser(jwtUser.id, timeSlots);
         return 'OK';
