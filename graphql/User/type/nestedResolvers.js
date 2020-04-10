@@ -10,7 +10,7 @@ module.exports.nestedUserSkillsResolver = async function (user) {
         throw(error);
     }
 };
-module.exports.nestedRemainingAvailabilityResolver = async function (user) {
+module.exports.nestedRemainingAvailabilityForTodayResolver = async function (user) {
     try{
         return await getRemainingAvailabilityForUser(user.id);
     }catch (error) {
@@ -18,7 +18,7 @@ module.exports.nestedRemainingAvailabilityResolver = async function (user) {
         throw(error);
     }
 };
-module.exports.nestedSuggestedAvailabilityResolver = async function (user) {
+module.exports.nestedSuggestedAvailabilityForTodayResolver = async function (user) {
     try{
         return await getSuggestedAvailabilityForUser(user.id);
     }catch (error) {
