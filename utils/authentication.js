@@ -2,7 +2,7 @@ const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const ApiError = require('./apiError');
-const {redisHmsetAsync, redisHmgetAsync} = require('./redis');
+const {redisHmsetAsyncWithTTL, redisHmgetAsync} = require('./redis');
 
 /** Constants **/
 const AUTH_MODE_PREFIX = module.exports.AUTH_MODE_PREFIX = 'Bearer ';
@@ -34,7 +34,9 @@ module.exports.generateTemporaryAccessCode = async function (emailAddress) {
     const randomCode = crypto.randomBytes(20).toString('base64').slice(0, 30);
     //Store a hash of the code in redis
     const codeHash = await generateHashForText(randomCode);
-    await redisHmsetAsync(emailAddress, {code: codeHash, timestamp: Date.now()/1000});
+    const TTL = Math.ceil(Date.now()/1000 + process.env.TEMP_CODE_VALIDTY_IN_SECONDS);
+
+    await redisHmsetAsyncWithTTL(emailAddress, {code: codeHash, timestamp: Date.now()/1000}, TTL);
     return randomCode;
 };
 module.exports.verifyTemporaryAccessCode = async function (emailAddress, code) {
