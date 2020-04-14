@@ -35,7 +35,6 @@ module.exports.generateTemporaryAccessCode = async function (emailAddress) {
     //Store a hash of the code in redis
     const codeHash = await generateHashForText(randomCode);
     const TTL = Math.ceil(Date.now()/1000 + process.env.TEMP_CODE_VALIDTY_IN_SECONDS);
-
     await redisHmsetAsyncWithTTL(emailAddress, {code: codeHash, timestamp: Date.now()/1000}, TTL);
     return randomCode;
 };
