@@ -52,9 +52,9 @@ module.exports.authWithTemporaryCodeResolver = async function (_, {emailAddress,
         throw(error);
     }
 };
-module.exports.signInWithSlackResolver = async function (_, {code}, {IANATimezone}){
+module.exports.signInWithSlackResolver = async function (_, {code, redirectURI}, {IANATimezone}){
     try {
-        const slackIntegrationData = await signInWithSlack(code);
+        const slackIntegrationData = await signInWithSlack(code, redirectURI);
         const fetchedUserInfo = await fetchUserInfoFromSlack(slackIntegrationData);
         let user = await User.findOne({emailAddress: fetchedUserInfo.emailAddress});
         if(!user){
