@@ -151,7 +151,8 @@ module.exports.inputFields = {
         code: {type: NonNull(GraphQLString)}
     },
     signInWithSlack: {
-        code: {type: NonNull(GraphQLString)}
+        code: {type: NonNull(GraphQLString)},
+        redirectURI: {type: GraphQLString}
     },
     refreshAccessToken: {
         refreshToken: {type: NonNull(GraphQLString)}

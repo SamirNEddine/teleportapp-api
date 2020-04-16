@@ -5,10 +5,10 @@ const slackAPIBaseURL = process.env.SLACK_API_BASE_URL;
 const clientId = process.env.SLACK_CLIENT_ID;
 const clientSecret = process.env.SLACK_CLIENT_SECRET;
 
-module.exports.signInWithSlack = async function (code) {
+module.exports.signInWithSlack = async function (code, redirectURI) {
     const request = {
         method: "GET",
-        url: `${slackAPIBaseURL}/oauth.access?client_id=${clientId}&client_secret=${clientSecret}&code=${code}`
+        url: `${slackAPIBaseURL}/oauth.access?client_id=${clientId}&client_secret=${clientSecret}&code=${code}${redirectURI ? '&redirect_uri='+redirectURI : ''}`
 
     };
     const response = await axios(request);
