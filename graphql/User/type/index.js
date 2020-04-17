@@ -14,7 +14,8 @@ const {
     GraphQLInputObjectType,
     GraphQLID,
     GraphQLString,
-    GraphQLList
+    GraphQLList,
+    GraphQLInt
 } = graphql;
 
 /** Nested TimeSlot type **/
@@ -38,16 +39,34 @@ const AvailabilityType = new GraphQLObjectType({
     name: 'Availability',
     fields: () => ({
         busyTimeSlots: {
-            type: GraphQLList(TimeSlotType)
+            type: NonNull(GraphQLList(TimeSlotType))
         },
         focusTimeSlots: {
-            type: GraphQLList(TimeSlotType)
+            type: NonNull(GraphQLList(TimeSlotType))
         },
         availableTimeSlots: {
-            type: GraphQLList(TimeSlotType)
+            type: NonNull(GraphQLList(TimeSlotType))
         },
         unassignedTimeSlots: {
-            type: GraphQLList(TimeSlotType)
+            type: NonNull(GraphQLList(TimeSlotType))
+        },
+        schedule: {
+            type: NonNull(GraphQLList(TimeSlotType))
+        },
+        totalTimeBusy: {
+            type: NonNull(GraphQLInt)
+        },
+        totalTimeFocus: {
+            type: NonNull(GraphQLInt),
+        },
+        totalTimeAvailable: {
+            type: NonNull(GraphQLInt),
+        },
+        totalTimeUnassigned: {
+            type: NonNull(GraphQLInt),
+        },
+        totalTimeScheduled: {
+            type: NonNull(GraphQLInt),
         }
     })
 });
