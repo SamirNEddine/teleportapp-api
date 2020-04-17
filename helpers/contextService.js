@@ -1,9 +1,11 @@
 const axios = require('axios');
+const {redisGetAsync, redisSetAsyncWithTTL} = require('../utils/redis');
 const ApiError = require('../utils/apiError');
 
 const contextServiceAPIBaseURL = process.env.CONTEXT_SERVICE_API_URL;
 const clientId = process.env.CONTEXT_SERVICE_API_CLIENT_ID;
 const clientSecret = process.env.CONTEXT_SERVICE_API_CLIENT_SECRET;
+const CALENDAR_INTEGRATION_ENABLED_REDIS_PREFIX = 'calendarIntegrationEnabled';
 
 const updateIntegrationForUser = async function (userId, name, data) {
     const request = {
@@ -25,6 +27,11 @@ const updateIntegrationForUser = async function (userId, name, data) {
     const response = await axios(request);
     if(response.status !== 200){
         throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+    //Quick and dirty for now
+    if(name === 'google'){
+        const redisKey = `${CALENDAR_INTEGRATION_ENABLED_REDIS_PREFIX}_${userId}`;
+        await redisSetAsyncWithTTL(redisKey, response.status === 200 ? 'yes' : 'no', 7*24*60*60);
     }
 };
 const getTodayAvailabilityForUser = async function (userId) {
@@ -126,6 +133,21 @@ const updateUserContextParams = async function (userId, userContextParams) {
     const response = await axios(request);
     if(response.status !== 200){
         throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+};
+module.exports.hasCalendarIntegrationEnabled = async function (userId) {
+    const redisKey = `${CALENDAR_INTEGRATION_ENABLED_REDIS_PREFIX}_${userId}`;
+    const cachedResult = await redisGetAsync(redisKey);
+    if(cachedResult){
+        return cachedResult === 'yes';
+    }else{
+        const request = {
+            method: "GET",
+            url: `${contextServiceAPIBaseURL}/integration?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&name=google`
+        };
+        const response = await axios(request);
+        await redisSetAsyncWithTTL(redisKey, response.status === 200 ? 'yes' : 'no', 7*24*60*60);
+        return response.status === 200;
     }
 };
 

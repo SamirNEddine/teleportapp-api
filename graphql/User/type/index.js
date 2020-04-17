@@ -171,7 +171,10 @@ module.exports.inputFields = {
         availabilityProfileId: {type: GraphQLString},
     },
     addGoogleCalendarIntegration: {
-        code: {type: NonNull(GraphQLString)}
+        code: {type: NonNull(GraphQLString)},
+        codeVerifier: {type: NonNull(GraphQLString)},
+        clientId: {type: NonNull(GraphQLString)},
+        redirectURI: {type: NonNull(GraphQLString)}
     },
     scheduleAvailabilityForToday: {
         timeSlots: {type: NonNull(GraphQLList(TimeSlotInputType))}

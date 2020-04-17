@@ -132,11 +132,11 @@ module.exports.updateAvailabilityProfileResolver = async function(_, {availabili
         throw(error);
     }
 };
-module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code}, {jwtUser}) {
+module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code, codeVerifier, clientId, redirectURI}, {jwtUser}) {
     try {
-        const googleIntegrationData = await authorizeCalendarAccess(code);
+        const googleIntegrationData = await authorizeCalendarAccess(code, codeVerifier, clientId, redirectURI);
         await updateGoogleIntegrationForUser(jwtUser.id, googleIntegrationData);
-        return 'OK';
+        return 'ok';
     }catch (error) {
         console.debug(error);
         throw(error);
@@ -145,7 +145,7 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code},
 module.exports.scheduleAvailabilityForTodayResolver = async function (_, {timeSlots}, {jwtUser}) {
     try {
         await scheduleTodayAvailabilityForUser(jwtUser.id, timeSlots);
-        return 'OK';
+        return 'ok';
     }catch (error) {
         console.debug(error);
         throw(error);
