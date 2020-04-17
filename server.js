@@ -5,6 +5,7 @@ const graphqlHTTP = require('express-graphql');
 const {getGraphqlCORS, getStatusCORS} = require('./utils/cors');
 const {httpRequestAuth} = require('./middleware/authentication');
 const {httpTimezoneCheck} = require('./middleware/timezone');
+const {integrationsCheck} = require('./middleware/integrations');
 const bodyParser = require('body-parser');
 
 /** Connect to the database **/
@@ -23,6 +24,7 @@ app.use(
     getGraphqlCORS(),
     httpRequestAuth,
     httpTimezoneCheck,
+    integrationsCheck,
     graphqlHTTP( req => ({
         schema,
         context: {
