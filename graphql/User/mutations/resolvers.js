@@ -144,8 +144,7 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code, 
 };
 module.exports.scheduleAvailabilityForTodayResolver = async function (_, {timeSlots}, {jwtUser}) {
     try {
-        await scheduleTodayAvailabilityForUser(jwtUser.id, timeSlots);
-        return 'ok';
+        return await scheduleTodayAvailabilityForUser(jwtUser.id, timeSlots);
     }catch (error) {
         console.debug(error);
         throw(error);
