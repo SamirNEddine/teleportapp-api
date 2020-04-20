@@ -143,8 +143,8 @@ UserSchema.virtual('contextParams').get( async function() {
         startWorkTime: this.preferences.startWorkTime,
         endWorkTime: this.preferences.endWorkTime,
         lunchTime: this.preferences.lunchTime,
+        dailySetupTime: this.preferences.dailySetupTime,
         IANATimezone: this.IANATimezone,
-        dailySetupTime: availabilityProfile.dailySetupTime,
         minAvailableSlotInMinutes: availabilityProfile.minAvailableSlotInMinutes,
         minFocusSlotInMinutes: availabilityProfile.minFocusSlotInMinutes
     }
