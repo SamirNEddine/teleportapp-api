@@ -1,4 +1,6 @@
 require('dotenv').config();
+const fs = require('fs');
+if (fs.existsSync('./.env.secrets')) require('dotenv').config({path: './.env.secrets'});
 const {connectToDb} = require('./utils/mongoose');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');

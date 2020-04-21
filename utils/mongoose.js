@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const dbConnectURL = `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_BASE_URL}:${process.env.DB_PORT}/${process.env.MAIN_DB_NAME}`;
+const dbConnectURL = process.env.DB_FULL_URL;
 module.exports.connectToDb = function () {
     return new Promise(async function (resolve, reject) {
         try{
