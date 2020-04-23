@@ -9,6 +9,7 @@ const {httpRequestAuth} = require('./middleware/authentication');
 const {httpTimezoneCheck} = require('./middleware/timezone');
 const {integrationsCheck} = require('./middleware/integrations');
 const bodyParser = require('body-parser');
+const appUpdateServer = require('./utils/nuts');
 
 /** Connect to the database **/
 connectToDb();
@@ -42,6 +43,9 @@ app.use(
 app.use('/status', getStatusCORS(), function (req, res) {
     res.status(200).send("200 OK: Server is up and running!");
 });
+
+/** Electron app update **/
+app.use('/electron-app', appUpdateServer.router);
 
 /** Start server **/
 const port = process.env.MAIN_SERVER_PORT ? process.env.MAIN_SERVER_PORT : 4000;
