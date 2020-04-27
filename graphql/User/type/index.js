@@ -67,6 +67,12 @@ const AvailabilityType = new GraphQLObjectType({
         },
         totalTimeScheduled: {
             type: NonNull(GraphQLInt),
+        },
+        startTime: {
+            type: NonNull(GraphQLString)
+        },
+        endTime: {
+            type: NonNull(GraphQLString)
         }
     })
 });
