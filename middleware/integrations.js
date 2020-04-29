@@ -2,7 +2,7 @@ const {hasCalendarIntegrationEnabled} = require('../helpers/contextService');
 const ApiError = require('../utils/apiError');
 
 module.exports.integrationsCheck = async function (req, rest, next) {
-    if(!req.body.query.includes('addGoogleCalendarIntegration')){
+    if(!req.header('ByPassIntegrationCheck') && !req.body.query.includes('addGoogleCalendarIntegration')){
         if(!req.error && req.jwtUser){
             try{
                 if(! await hasCalendarIntegrationEnabled(req.jwtUser.id)){

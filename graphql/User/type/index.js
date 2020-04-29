@@ -116,7 +116,7 @@ module.exports.UserType = new GraphQLObjectType({
         profilePictureURL: {
             type: GraphQLString
         },
-        phoneNumber: {
+        jobTitle: {
             type: GraphQLString
         },
         skills: {

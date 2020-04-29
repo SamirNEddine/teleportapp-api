@@ -107,6 +107,9 @@ const UserSchema = Schema({
     profilePictureURL: {
         type: String
     },
+    jobTitle: {
+        type: String
+    },
     availabilityProfile: {
         type: Schema.Types.ObjectID,
         required: true
