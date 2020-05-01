@@ -8,13 +8,15 @@ const {
 /** Types **/
 const User = require('./User');
 const AvailabilityProfile = require('./AvailabilityProfile');
+const Skill = require('./Skill');
 
 /** Queries **/
 const RootQuery = new GraphQLObjectType({
     name: "Query",
     fields: {
         ...User.queries,
-        ...AvailabilityProfile.queries
+        ...AvailabilityProfile.queries,
+        ...Skill.queries
     }
 });
 
@@ -23,7 +25,8 @@ const RootMutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
         ...User.mutations,
-        ...AvailabilityProfile.mutations
+        ...AvailabilityProfile.mutations,
+        ...Skill.mutations
     }
 });
 
