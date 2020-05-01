@@ -15,7 +15,8 @@ const {
     GraphQLID,
     GraphQLString,
     GraphQLList,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLBoolean
 } = graphql;
 
 /** Nested TimeSlot type **/
@@ -116,7 +117,7 @@ module.exports.UserType = new GraphQLObjectType({
         profilePictureURL: {
             type: GraphQLString
         },
-        phoneNumber: {
+        jobTitle: {
             type: GraphQLString
         },
         skills: {
@@ -147,6 +148,9 @@ module.exports.UserType = new GraphQLObjectType({
         availabilityProfile: {
             type: NonNull(AvailabilityProfileType),
             resolve: nestedAvailabilityProfileResolver
+        },
+        onBoarded: {
+            type: NonNull(GraphQLBoolean)
         }
     })
 });
@@ -184,7 +188,9 @@ module.exports.inputFields = {
     },
     updateUserProfile: {
         firstName: {type: NonNull(GraphQLString)},
-        lastName: {type: NonNull(GraphQLString)}
+        lastName: {type: NonNull(GraphQLString)},
+        jobTitle: {type: NonNull(GraphQLString)},
+        skills: {type: NonNull(GraphQLList(GraphQLID))}
     },
     updateUserPreferences: {
         startWorkTime: {type: GraphQLString},

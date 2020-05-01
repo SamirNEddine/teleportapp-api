@@ -86,11 +86,11 @@ module.exports.refreshAccessTokenResolver = async function (_, {refreshToken}) {
         throw(error);
     }
 };
-module.exports.updateUserProfileResolver = async function (_, {firstName, lastName}, {jwtUser}) {
+module.exports.updateUserProfileResolver = async function (_, userProperties, {jwtUser}) {
     try {
         const user = await User.findOneAndUpdate(
             {_id: jwtUser.id},
-            {firstName, lastName},
+            userProperties,
             {new: true});
         if(!user) {
         }else{

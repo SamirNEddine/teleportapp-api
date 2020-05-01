@@ -4,7 +4,8 @@ const {
     GraphQLObjectType,
     GraphQLID,
     GraphQLString,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLFloat
 } = graphql;
 
 /** Type definition **/
@@ -26,6 +27,9 @@ module.exports.AvailabilityProfileType = new GraphQLObjectType({
         },
         minFocusSlotInMinutes: {
             type: NonNull(GraphQLInt)
+        },
+        busyRatio: {
+            type: NonNull(GraphQLFloat)
         }
     })
 });

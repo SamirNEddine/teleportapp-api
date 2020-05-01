@@ -26,26 +26,6 @@ module.exports.fetchUserInfoFromSlack = async function (integrationData) {
     if(!response.data.ok){
         throw ApiError.INTERNAL_SERVER_ERROR(`Internal server error: ${response.data.error}`);
     }
-    const {first_name, last_name, email, phone} = response.data.profile;
-    return {firstName: first_name, lastName: last_name, emailAddress: email, phoneNumber: phone};
-};
-module.exports.updateUserStatus = async function (integrationData, availabilityLevel) {
-    const request = {
-        method: "POST",
-        url: `${slackAPIBaseURL}/users.profile.set`,
-        headers: {
-            'Authorization': `Bearer ${integrationData.access_token}`
-        },
-        data: {
-            profile: {
-                status_text: "Testing Google Calendar Integration",
-                status_emoji: ":date:",
-                status_expiration: Date.now()/1000 + 3600
-            }
-        }
-    };
-    const response = await axios(request);
-    if(!response.data.ok){
-        throw ApiError.BAD_REQUEST_ERROR(`Bad request: ${response.data.error}`);
-    }
+    const {first_name, last_name, email, title, image_512, image_original} = response.data.profile;
+    return {firstName: first_name, lastName: last_name, emailAddress: email, jobTitle: title, profilePictureURL: (image_512 && image_512.length > 0) ? image_512 : image_original};
 };

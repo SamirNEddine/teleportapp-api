@@ -20,6 +20,10 @@ const AvailabilityProfileScheme = Schema({
         type: Number,
         required: true
     },
+    busyRatio: {
+        type: Number,
+        required: true
+    },
 });
 
 /** Extend AvailabilityProfile model with helpers methods **/

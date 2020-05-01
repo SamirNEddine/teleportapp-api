@@ -107,6 +107,9 @@ const UserSchema = Schema({
     profilePictureURL: {
         type: String
     },
+    jobTitle: {
+        type: String
+    },
     availabilityProfile: {
         type: Schema.Types.ObjectID,
         required: true
@@ -121,6 +124,11 @@ const UserSchema = Schema({
     IANATimezone: {
         type: String,
         required: true
+    },
+    onBoarded: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 }, {timestamp: true});
 UserSchema.set('toObject', { getters: true });
