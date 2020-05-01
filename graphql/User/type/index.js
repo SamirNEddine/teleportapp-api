@@ -184,7 +184,9 @@ module.exports.inputFields = {
     },
     updateUserProfile: {
         firstName: {type: NonNull(GraphQLString)},
-        lastName: {type: NonNull(GraphQLString)}
+        lastName: {type: NonNull(GraphQLString)},
+        jobTitle: {type: NonNull(GraphQLString)},
+        skills: {type: NonNull(GraphQLList(GraphQLID))}
     },
     updateUserPreferences: {
         startWorkTime: {type: GraphQLString},
