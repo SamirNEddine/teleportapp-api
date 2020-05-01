@@ -136,6 +136,7 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code, 
     try {
         const googleIntegrationData = await authorizeCalendarAccess(code, codeVerifier, clientId, redirectURI);
         await updateGoogleIntegrationForUser(jwtUser.id, googleIntegrationData);
+        await User.findOneAndUpdate({_id: jwtUser.id}, {onBoarded: true});
         return 'ok';
     }catch (error) {
         console.debug(error);
