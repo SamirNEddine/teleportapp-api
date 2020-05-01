@@ -15,7 +15,8 @@ const {
     GraphQLID,
     GraphQLString,
     GraphQLList,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLBoolean
 } = graphql;
 
 /** Nested TimeSlot type **/
@@ -147,6 +148,9 @@ module.exports.UserType = new GraphQLObjectType({
         availabilityProfile: {
             type: NonNull(AvailabilityProfileType),
             resolve: nestedAvailabilityProfileResolver
+        },
+        onBoarded: {
+            type: NonNull(GraphQLBoolean)
         }
     })
 });

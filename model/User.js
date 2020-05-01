@@ -124,6 +124,11 @@ const UserSchema = Schema({
     IANATimezone: {
         type: String,
         required: true
+    },
+    onBoarded: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 }, {timestamp: true});
 UserSchema.set('toObject', { getters: true });
