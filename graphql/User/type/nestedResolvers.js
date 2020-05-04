@@ -1,6 +1,6 @@
 const Skill = require('../../../model/Skill');
 const AvailabilityProfile = require('../../../model/AvailabilityProfile');
-const {getTodayAvailabilityForUser, getSuggestedAvailabilityForUser, getCurrentAvailabilityForUser} = require('../../../helpers/contextService');
+const {getTodayAvailabilityForUser, getSuggestedAvailabilityForUser, getCurrentAvailabilityForUser, hasScheduledAvailabilityForToday} = require('../../../helpers/contextService');
 
 module.exports.nestedUserSkillsResolver = async function (user) {
     try{
@@ -37,6 +37,14 @@ module.exports.nestedCurrentAvailabilityResolver = async function (user) {
 module.exports.nestedAvailabilityProfileResolver = async function (user) {
     try{
         return await AvailabilityProfile.findById(user.availabilityProfile);
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.nestedHasScheduledAvailabilityForTodayResolver = async function(user) {
+    try{
+        return await hasScheduledAvailabilityForToday(user.id, user.IANATimezone);
     }catch (error) {
         console.debug(error);
         throw(error);
