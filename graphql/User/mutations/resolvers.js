@@ -143,9 +143,9 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code, 
         throw(error);
     }
 };
-module.exports.scheduleAvailabilityForTodayResolver = async function (_, {timeSlots}, {jwtUser}) {
+module.exports.scheduleAvailabilityForTodayResolver = async function (_, {timeSlots}, {jwtUser, IANATimezone}) {
     try {
-        return await scheduleTodayAvailabilityForUser(jwtUser.id, timeSlots);
+        return await scheduleTodayAvailabilityForUser(jwtUser.id, timeSlots, IANATimezone);
     }catch (error) {
         console.debug(error);
         throw(error);
@@ -155,7 +155,7 @@ module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, a
     try {
         const user = await User.findById(jwtUser.id);
         const availability = await getSuggestedAvailabilityForUser(user.id);
-        return await scheduleTodayAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots));
+        return await scheduleTodayAvailabilityForUser(jwtUser.id, availability.focusTimeSlots.concat(availability.availableTimeSlots), IANATimezone);
     }catch (error) {
         console.debug(error);
         throw(error);

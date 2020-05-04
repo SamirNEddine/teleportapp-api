@@ -25,6 +25,12 @@ const getTimestampFromLocalTodayTime = function(time, IANATimezone) {
     const dateTime = DateTime.fromObject({year, month, day, hour, minute, zone:IANATimezone });
     return dateTime.toMillis();
 };
+const getLocalTodayDate = function(IANATimezone) {
+    const localDateTime  = DateTime.utc().setZone(IANATimezone);
+    const {year, month, day} = localDateTime;
+    return `${year}-${month}-${day}`;
+};
 
 module.exports.updateUserIANATimezoneIfNeeded = updateUserIANATimezoneIfNeeded;
 module.exports.getTimestampFromLocalTodayTime = getTimestampFromLocalTodayTime;
+module.exports.getLocalTodayDate = getLocalTodayDate;
