@@ -26,6 +26,9 @@ module.exports.fetchUserInfoFromSlack = async function (integrationData) {
     if(!response.data.ok){
         throw ApiError.INTERNAL_SERVER_ERROR(`Internal server error: ${response.data.error}`);
     }
-    const {first_name, last_name, email, title, image_512, image_original} = response.data.profile;
-    return {firstName: first_name, lastName: last_name, emailAddress: email, jobTitle: title, profilePictureURL: (image_512 && image_512.length > 0) ? image_512 : image_original};
+
+    const {real_name, email, title, image_512, image_original} = response.data.profile;
+    const firstName = real_name.split(' ').slice(0, 1).join(' ');
+    const lastName = real_name.split(' ').slice(1).join(' ');
+    return {firstName, lastName, emailAddress: email, jobTitle: title, profilePictureURL: (image_512 && image_512.length > 0) ? image_512 : image_original};
 };
