@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./utils/sentry').setupSentry();
 const fs = require('fs');
 if (fs.existsSync('./.env.secrets')) require('dotenv').config({path: './.env.secrets'});
 const {connectToDb} = require('./utils/mongoose');
@@ -10,7 +11,7 @@ const {httpTimezoneCheck} = require('./middleware/timezone');
 const {integrationsCheck} = require('./middleware/integrations');
 const bodyParser = require('body-parser');
 const appUpdateServer = require('./utils/nuts');
-
+myUndefinedFunction();
 /** Connect to the database **/
 connectToDb();
 
