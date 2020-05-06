@@ -11,7 +11,7 @@ const {httpTimezoneCheck} = require('./middleware/timezone');
 const {integrationsCheck} = require('./middleware/integrations');
 const bodyParser = require('body-parser');
 const appUpdateServer = require('./utils/nuts');
-myUndefinedFunction();
+
 /** Connect to the database **/
 connectToDb();
 
