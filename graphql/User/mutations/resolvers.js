@@ -14,6 +14,7 @@ const {
     setCurrentAvailabilityForUser,
     deleteAccount
 } = require('../../../helpers/contextService');
+const {cleanCacheForUser} = require('../../../utils/redis');
 
 const DEFAULT_AVAILABILITY_PROFILE_KEY = 'notBusy';
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
@@ -172,7 +173,10 @@ module.exports.overrideCurrentAvailabilityResolver = async function (_, {newAvai
 };
 module.exports.deleteAccountResolver = async function(_, {id}) {
     try {
-        return await deleteAccount(id);
+        await deleteAccount(id);
+        await cleanCacheForUser(id);
+        await User.findByIdAndRemove(id);
+        return 'ok';
     }catch (error) {
         console.debug(error);
         throw(error);
