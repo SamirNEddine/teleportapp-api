@@ -169,3 +169,11 @@ module.exports.overrideCurrentAvailabilityResolver = async function (_, {newAvai
         throw(error);
     }
 };
+module.exports.deleteAccountResolver = async function(_, {id}) {
+    try {
+        return 'ok';
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
