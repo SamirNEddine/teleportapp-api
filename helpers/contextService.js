@@ -85,6 +85,17 @@ const getCurrentAvailabilityForUser = async function (userId) {
     }
     return response.data;
 };
+const getNextAvailabilityForUser = async function (userId) {
+    const request = {
+        method: "GET",
+        url: `${contextServiceAPIBaseURL}/availability/next?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}`
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+    return response.data;
+};
 const setCurrentAvailabilityForUser = async function (userId, newAvailability) {
     if(newAvailability !== 'available' && newAvailability !== 'focus') {
         throw(new Error('Invalid availability!'));
@@ -200,6 +211,7 @@ module.exports.updateGoogleIntegrationForUser = updateGoogleIntegrationForUser =
 module.exports.getTodayAvailabilityForUser = getTodayAvailabilityForUser;
 module.exports.getSuggestedAvailabilityForUser = getSuggestedAvailabilityForUser;
 module.exports.getCurrentAvailabilityForUser = getCurrentAvailabilityForUser;
+module.exports.getNextAvailabilityForUser = getNextAvailabilityForUser;
 module.exports.setCurrentAvailabilityForUser = setCurrentAvailabilityForUser;
 module.exports.scheduleTodayAvailabilityForUser = scheduleTodayAvailabilityForUser;
 module.exports.updateUserContextParams = updateUserContextParams;
