@@ -190,6 +190,29 @@ module.exports.hasScheduledAvailabilityForToday = async function (userId, IANATi
     }
 };
 
+/** admin **/
+module.exports.cleanContextServiceDataForUser = async function(userId) {
+    const request = {
+        method: "POST",
+        url: `${contextServiceAPIBaseURL}/admin/deleteAccount`,
+        headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+        },
+        data: JSON.stringify({
+            clientId,
+            clientSecret,
+            userId
+        }),
+        proxy: false
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+    return response.data
+};
+
 /** Exports **/
 module.exports.updateSlackIntegrationForUser = updateSlackIntegrationForUser = async function (userId, data) {
     await updateIntegrationForUser(userId, 'slack', data);

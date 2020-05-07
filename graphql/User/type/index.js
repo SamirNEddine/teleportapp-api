@@ -217,5 +217,8 @@ module.exports.inputFields = {
     },
     overrideCurrentAvailability: {
         newAvailability: {type: NonNull(GraphQLString)}
+    },
+    deleteAccount: {
+        id: {type: NonNull(GraphQLID)}
     }
 };

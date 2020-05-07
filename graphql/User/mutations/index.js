@@ -13,8 +13,10 @@ const {
     scheduleAvailabilityForTodayResolver,
     getAndConfirmRemainingAvailabilityResolver,
     updateAvailabilityProfileResolver,
-    overrideCurrentAvailabilityResolver
+    overrideCurrentAvailabilityResolver,
+    deleteAccountResolver
 } = require('./resolvers');
+const { authorizedResolver, AccessLevels } = require('../../../utils/authorization');
 
 /** Mutations definitions **/
 const signInWithEmail = {
@@ -71,6 +73,11 @@ const overrideCurrentAvailability = {
     args: inputFields.overrideCurrentAvailability,
     resolve: authenticatedResolver(overrideCurrentAvailabilityResolver)
 };
+const deleteAccount = {
+    type: GraphQLString,
+    args: inputFields.deleteAccount,
+    resolve: authenticatedResolver(authorizedResolver(deleteAccountResolver, AccessLevels.SUPER_ADMIN))
+};
 
 /** Exports **/
 module.exports = {
@@ -84,5 +91,6 @@ module.exports = {
     addGoogleCalendarIntegration,
     scheduleAvailabilityForToday,
     getAndConfirmRemainingAvailability,
-    overrideCurrentAvailability
+    overrideCurrentAvailability,
+    deleteAccount,
 };
