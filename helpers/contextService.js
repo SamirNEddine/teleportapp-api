@@ -191,7 +191,7 @@ module.exports.hasScheduledAvailabilityForToday = async function (userId, IANATi
 };
 
 /** admin **/
-module.exports.deleteAccount = async function(userId) {
+module.exports.cleanContextServiceDataForUser = async function(userId) {
     const request = {
         method: "POST",
         url: `${contextServiceAPIBaseURL}/admin/deleteAccount`,

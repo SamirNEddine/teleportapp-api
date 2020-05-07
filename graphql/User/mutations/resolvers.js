@@ -12,7 +12,7 @@ const {
     getSuggestedAvailabilityForUser,
     updateUserContextParams,
     setCurrentAvailabilityForUser,
-    deleteAccount
+    cleanContextServiceDataForUser
 } = require('../../../helpers/contextService');
 const {cleanCacheForUser} = require('../../../utils/redis');
 
@@ -173,7 +173,7 @@ module.exports.overrideCurrentAvailabilityResolver = async function (_, {newAvai
 };
 module.exports.deleteAccountResolver = async function(_, {id}) {
     try {
-        await deleteAccount(id);
+        await cleanContextServiceDataForUser(id);
         await cleanCacheForUser(id);
         await User.findByIdAndRemove(id);
         return 'ok';
