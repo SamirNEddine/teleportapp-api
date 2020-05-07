@@ -11,7 +11,8 @@ const {
     scheduleTodayAvailabilityForUser,
     getSuggestedAvailabilityForUser,
     updateUserContextParams,
-    setCurrentAvailabilityForUser
+    setCurrentAvailabilityForUser,
+    deleteAccount
 } = require('../../../helpers/contextService');
 
 const DEFAULT_AVAILABILITY_PROFILE_KEY = 'notBusy';
@@ -171,7 +172,7 @@ module.exports.overrideCurrentAvailabilityResolver = async function (_, {newAvai
 };
 module.exports.deleteAccountResolver = async function(_, {id}) {
     try {
-        return 'ok';
+        return await deleteAccount(id);
     }catch (error) {
         console.debug(error);
         throw(error);
