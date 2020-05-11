@@ -11,8 +11,10 @@ const {
     scheduleTodayAvailabilityForUser,
     getSuggestedAvailabilityForUser,
     updateUserContextParams,
-    setCurrentAvailabilityForUser
+    setCurrentAvailabilityForUser,
+    cleanContextServiceDataForUser
 } = require('../../../helpers/contextService');
+const {cleanCacheForUser} = require('../../../utils/redis');
 
 const DEFAULT_AVAILABILITY_PROFILE_KEY = 'notBusy';
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
@@ -164,6 +166,17 @@ module.exports.getAndConfirmRemainingAvailabilityResolver = async function (_, a
 module.exports.overrideCurrentAvailabilityResolver = async function (_, {newAvailability}, {jwtUser}) {
     try {
         return await setCurrentAvailabilityForUser(jwtUser.id, newAvailability);
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.deleteAccountResolver = async function(_, {id}) {
+    try {
+        await cleanContextServiceDataForUser(id);
+        await cleanCacheForUser(id);
+        await User.findByIdAndRemove(id);
+        return 'ok';
     }catch (error) {
         console.debug(error);
         throw(error);

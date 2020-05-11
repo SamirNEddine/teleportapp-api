@@ -121,6 +121,12 @@ const UserSchema = Schema({
         type: UserPreferences,
         default: {}
     },
+    role: {
+        type: String,
+        required: true,
+        enum: ['user', 'superAdmin'],
+        default: 'user'
+    },
     IANATimezone: {
         type: String,
         required: true
