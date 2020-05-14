@@ -4,7 +4,8 @@ const {
     getTodayAvailabilityForUser,
     getSuggestedAvailabilityForUser,
     getCurrentAvailabilityForUser,
-    hasScheduledAvailabilityForToday
+    hasScheduledAvailabilityForToday,
+    getNextAvailabilityForUser
 } = require('../../../helpers/contextService');
 
 module.exports.nestedUserSkillsResolver = async function (user) {
@@ -34,6 +35,14 @@ module.exports.nestedSuggestedAvailabilityForTodayResolver = async function (use
 module.exports.nestedCurrentAvailabilityResolver = async function (user) {
     try{
         return await getCurrentAvailabilityForUser(user.id);
+    }catch (error) {
+        console.debug(error);
+        throw(error);
+    }
+};
+module.exports.nestedNextAvailabilityResolver = async function (user) {
+    try{
+        return await getNextAvailabilityForUser(user.id);
     }catch (error) {
         console.debug(error);
         throw(error);

@@ -7,6 +7,7 @@ const {
     nestedTodayAvailabilityResolver,
     nestedSuggestedAvailabilityForTodayResolver,
     nestedCurrentAvailabilityResolver,
+    nestedNextAvailabilityResolver,
     nestedAvailabilityProfileResolver,
     nestedHasScheduledAvailabilityForTodayResolver
 } = require('./nestedResolvers');
@@ -128,6 +129,10 @@ module.exports.UserType = new GraphQLObjectType({
         currentAvailability: {
             type: TimeSlotType,
             resolve: nestedCurrentAvailabilityResolver
+        },
+        nextAvailability: {
+            type: TimeSlotType,
+            resolve: nestedNextAvailabilityResolver
         },
         todayAvailability: {
             type: AvailabilityType,
