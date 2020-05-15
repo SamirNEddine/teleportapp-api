@@ -197,10 +197,10 @@ module.exports.inputFields = {
         refreshToken: {type: NonNull(GraphQLString)}
     },
     updateUserProfile: {
-        firstName: {type: NonNull(GraphQLString)},
-        lastName: {type: NonNull(GraphQLString)},
-        jobTitle: {type: NonNull(GraphQLString)},
-        skills: {type: NonNull(GraphQLList(GraphQLID))}
+        firstName: {type: GraphQLString},
+        lastName: {type: GraphQLString},
+        jobTitle: {type: GraphQLString},
+        skills: {type: GraphQLList(GraphQLID)}
     },
     updateUserPreferences: {
         startWorkTime: {type: GraphQLString},
