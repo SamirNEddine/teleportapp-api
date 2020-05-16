@@ -12,6 +12,7 @@ const DEFAULT_START_WORK_TIME = '0900';
 const DEFAULT_END_WORK_TIME = '1800';
 const DEFAULT_DAILY_SETUP_TIME = '0930';
 const DEFAULT_LUNCH_TIME = '1230';
+const DEFAULT_LUNCH_DURATION_IN_MINUTES = 60;
 const getStartWorkTime = function (startWorkTime) {
     if(!parseInt(startWorkTime)){
         return DEFAULT_START_WORK_TIME;
@@ -37,13 +38,13 @@ const setEndWorkTime = function (endWorkTime) {
     return endWorkTime;
 };
 const getDailySetupTime = function (dailySetupTime) {
-    if(!parseInt(dailySetupTime)){
+    if(!parseInt(dailySetupTime) && dailySetupTime !== 'none'){
         return DEFAULT_DAILY_SETUP_TIME;
     }
     return dailySetupTime;
 };
 const setDailySetupTime = function (dailySetupTime) {
-    if(!parseInt(dailySetupTime)){
+    if(!parseInt(dailySetupTime) && dailySetupTime !== 'none'){
         return this.dailySetupTime;
     }
     return dailySetupTime;
@@ -59,6 +60,18 @@ const setLunchTime = function (lunchTime) {
         return this.lunchTime;
     }
     return lunchTime;
+};
+const getLunchDuration= function (lunchDuration) {
+    if(!parseInt(lunchDuration)){
+        return DEFAULT_LUNCH_DURATION_IN_MINUTES;
+    }
+    return lunchDuration;
+};
+const setLunchDuration = function (lunchDuration) {
+    if(!parseInt(lunchDuration)){
+        return this.lunchDurationInMinutes;
+    }
+    return lunchDuration;
 };
 const UserPreferences = Schema ({
     startWorkTime: {
@@ -80,6 +93,11 @@ const UserPreferences = Schema ({
         type: String,
         get: getLunchTime,
         set: setLunchTime
+    },
+    lunchDurationInMinutes: {
+        type: Number,
+        get: getLunchDuration,
+        set: setLunchDuration
     }
 });
 UserPreferences.set('toObject', { getters: true });

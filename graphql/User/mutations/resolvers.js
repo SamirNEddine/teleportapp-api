@@ -93,7 +93,7 @@ module.exports.updateUserProfileResolver = async function (_, userProperties, {j
         const user = await User.findOneAndUpdate(
             {_id: jwtUser.id},
             userProperties,
-            {new: true});
+            {new: true, runValidators: true});
         if(!user) {
         }else{
             return user;

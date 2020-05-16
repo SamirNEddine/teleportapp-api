@@ -9,7 +9,8 @@ const {
     nestedCurrentAvailabilityResolver,
     nestedNextAvailabilityResolver,
     nestedAvailabilityProfileResolver,
-    nestedHasScheduledAvailabilityForTodayResolver
+    nestedHasScheduledAvailabilityForTodayResolver,
+    nestedIntegrationsResolver
 } = require('./nestedResolvers');
 const {
     GraphQLObjectType,
@@ -95,6 +96,9 @@ const UserPreferencesType = module.exports.UserPreferencesType = new GraphQLObje
         },
         lunchTime: {
             type: NonNull(GraphQLString)
+        },
+        lunchDurationInMinutes: {
+            type: NonNull(GraphQLInt)
         }
     })
 });
@@ -161,6 +165,10 @@ module.exports.UserType = new GraphQLObjectType({
         hasScheduledAvailabilityForToday: {
             type: NonNull(GraphQLBoolean),
             resolve: nestedHasScheduledAvailabilityForTodayResolver
+        },
+        integrations: {
+            type: NonNull(GraphQLList(GraphQLString)),
+            resolve: nestedIntegrationsResolver
         }
     })
 });
@@ -197,16 +205,17 @@ module.exports.inputFields = {
         refreshToken: {type: NonNull(GraphQLString)}
     },
     updateUserProfile: {
-        firstName: {type: NonNull(GraphQLString)},
-        lastName: {type: NonNull(GraphQLString)},
-        jobTitle: {type: NonNull(GraphQLString)},
-        skills: {type: NonNull(GraphQLList(GraphQLID))}
+        firstName: {type: GraphQLString},
+        lastName: {type: GraphQLString},
+        jobTitle: {type: GraphQLString},
+        skills: {type: GraphQLList(GraphQLID)}
     },
     updateUserPreferences: {
         startWorkTime: {type: GraphQLString},
         endWorkTime: {type: GraphQLString},
         lunchTime: {type: GraphQLString},
-        dailySetupTime: {type: GraphQLString}
+        dailySetupTime: {type: GraphQLString},
+        lunchDurationInMinutes: {type: GraphQLInt}
     },
     updateAvailabilityProfile: {
         availabilityProfileId: {type: GraphQLString},
