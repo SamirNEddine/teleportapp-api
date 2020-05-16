@@ -38,13 +38,13 @@ const setEndWorkTime = function (endWorkTime) {
     return endWorkTime;
 };
 const getDailySetupTime = function (dailySetupTime) {
-    if(!parseInt(dailySetupTime)){
+    if(!parseInt(dailySetupTime) && dailySetupTime !== 'none'){
         return DEFAULT_DAILY_SETUP_TIME;
     }
     return dailySetupTime;
 };
 const setDailySetupTime = function (dailySetupTime) {
-    if(!parseInt(dailySetupTime)){
+    if(!parseInt(dailySetupTime) && dailySetupTime !== 'none'){
         return this.dailySetupTime;
     }
     return dailySetupTime;

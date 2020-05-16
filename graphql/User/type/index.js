@@ -9,7 +9,8 @@ const {
     nestedCurrentAvailabilityResolver,
     nestedNextAvailabilityResolver,
     nestedAvailabilityProfileResolver,
-    nestedHasScheduledAvailabilityForTodayResolver
+    nestedHasScheduledAvailabilityForTodayResolver,
+    nestedIntegrationsResolver
 } = require('./nestedResolvers');
 const {
     GraphQLObjectType,
@@ -164,6 +165,10 @@ module.exports.UserType = new GraphQLObjectType({
         hasScheduledAvailabilityForToday: {
             type: NonNull(GraphQLBoolean),
             resolve: nestedHasScheduledAvailabilityForTodayResolver
+        },
+        integrations: {
+            type: NonNull(GraphQLList(GraphQLString)),
+            resolve: nestedIntegrationsResolver
         }
     })
 });

@@ -52,6 +52,17 @@ const updateIntegrationForUser = async function (userId, name, data) {
         await redisSetAsyncWithTTL(redisKey, response.status === 200 ? 'yes' : 'no', 7*24*60*60);
     }
 };
+const getIntegrationsForUser = async function (userId) {
+    const request = {
+        method: "GET",
+        url: `${contextServiceAPIBaseURL}/integration/all?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}`
+    };
+    const response = await axios(request);
+    if(response.status !== 200){
+        throw ApiError.INTERNAL_SERVER_ERROR();
+    }
+    return response.data;
+};
 const getTodayAvailabilityForUser = async function (userId) {
     const request = {
         method: "GET",
@@ -238,3 +249,4 @@ module.exports.getNextAvailabilityForUser = getNextAvailabilityForUser;
 module.exports.setCurrentAvailabilityForUser = setCurrentAvailabilityForUser;
 module.exports.scheduleTodayAvailabilityForUser = scheduleTodayAvailabilityForUser;
 module.exports.updateUserContextParams = updateUserContextParams;
+module.exports.getIntegrationsForUser = getIntegrationsForUser;
