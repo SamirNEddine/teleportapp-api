@@ -189,7 +189,7 @@ module.exports.hasCalendarIntegrationEnabled = async function (userId) {
             url: `${contextServiceAPIBaseURL}/integration?clientId=${clientId}&clientSecret=${clientSecret}&userId=${userId}&name=google`
         };
         const response = await axios(request);
-        await redisSetAsyncWithTTL(redisKey, response.status === 200 ? 'yes' : 'no', 7*24*60*60);
+        await redisSetAsyncWithTTL(redisKey, response.status === 200 ? 'yes' : 'no', response.status === 200 ? 7*24*60*60 : 2*60);
         return response.status === 200;
     }
 };
