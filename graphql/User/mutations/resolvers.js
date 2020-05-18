@@ -15,6 +15,7 @@ const {
     cleanContextServiceDataForUser
 } = require('../../../helpers/contextService');
 const {cleanCacheForUser} = require('../../../utils/redis');
+const {updateIsOnBoardedCache} = require('../../../middleware/integrations');
 
 const DEFAULT_AVAILABILITY_PROFILE_KEY = 'notBusy';
 module.exports.signInWithEmailResolver = async function (_, {emailAddress}, {IANATimezone}) {
@@ -139,6 +140,7 @@ module.exports.addGoogleCalendarIntegrationResolver = async function (_, {code, 
         const googleIntegrationData = await authorizeCalendarAccess(code, codeVerifier, clientId, redirectURI);
         await updateGoogleIntegrationForUser(jwtUser.id, googleIntegrationData);
         await User.findOneAndUpdate({_id: jwtUser.id}, {onBoarded: true});
+        await updateIsOnBoardedCache(jwtUser.id,true);
         return 'ok';
     }catch (error) {
         console.debug(error);
