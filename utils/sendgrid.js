@@ -30,5 +30,5 @@ module.exports.addEmailToWaitingList = async function(email) {
         }
     };
     const [response] = await client.request(request);
-    return response.statusMessage;
+    return response.statusCode;
 };
