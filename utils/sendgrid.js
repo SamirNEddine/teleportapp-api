@@ -17,3 +17,18 @@ module.exports.sendTemporaryAccessCode = async function (emailAddress, code) {
         console.error(err.toString());
     }
 };
+
+const client = require('@sendgrid/client');
+client.setApiKey(process.env.SENDGRID_API_KEY);
+module.exports.addEmailToWaitingList = async function(email) {
+    const request = {
+        method: 'PUT',
+        url: '/v3/marketing/contacts',
+        body:{
+            list_ids: [process.env.SENDGRID_WAITING_LIST_ID],
+            contacts: [{email}]
+        }
+    };
+    const [response] = await client.request(request);
+    return response.statusMessage;
+};

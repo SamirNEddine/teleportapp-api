@@ -15,6 +15,7 @@
     "nodemon": "^2.0.2"
   },
   "dependencies": {
+    "@sendgrid/client": "^7.1.1",
     "@sendgrid/mail": "^6.5.3",
     "@sentry/node": "5.15.5",
     "argon2": "^0.25.1",

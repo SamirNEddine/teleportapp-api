@@ -19,3 +19,9 @@ module.exports.getGraphqlCORS = function () {
 module.exports.getStatusCORS = function () {
     return cors();
 };
+module.exports.getWaitingListCors = function () {
+    return cors({
+        origin: /teleport\.so$/,
+        optionsSuccessStatus: 200
+    });
+};
