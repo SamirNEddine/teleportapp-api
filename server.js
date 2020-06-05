@@ -5,12 +5,13 @@ if (fs.existsSync('./.env.secrets')) require('dotenv').config({path: './.env.sec
 const {connectToDb} = require('./utils/mongoose');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const {getGraphqlCORS, getStatusCORS} = require('./utils/cors');
+const {getGraphqlCORS, getStatusCORS, getWaitingListCors} = require('./utils/cors');
 const {httpRequestAuth} = require('./middleware/authentication');
 const {httpTimezoneCheck} = require('./middleware/timezone');
 const {integrationsCheck} = require('./middleware/integrations');
 const bodyParser = require('body-parser');
 const appUpdateServer = require('./utils/nuts');
+const waitingListRouter = require('./waiting-list');
 
 /** Connect to the database **/
 connectToDb();
@@ -47,6 +48,9 @@ app.use('/status', getStatusCORS(), function (req, res) {
 
 /** Electron app update **/
 app.use('/electron-app', appUpdateServer.router);
+
+/** Waiting list endpoint **/
+app.use('/waiting-list', getWaitingListCors(), bodyParser.json(), waitingListRouter);
 
 /** Start server **/
 const port = process.env.MAIN_SERVER_PORT ? process.env.MAIN_SERVER_PORT : 4000;
