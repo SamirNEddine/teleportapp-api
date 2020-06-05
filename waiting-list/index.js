@@ -8,7 +8,7 @@ router.post('/', async function (req, res) {
         const {email} = req.body;
         if(!email) throw(new Error('No email found'));
         const result = await addEmailToWaitingList(email);
-        if(result === 'Accepted'){
+        if(result === 202){
             res.send('ok');
         }else{
             res.status(400).send('Something went wrong!');
