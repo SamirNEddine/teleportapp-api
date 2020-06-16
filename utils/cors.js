@@ -21,7 +21,7 @@ module.exports.getStatusCORS = function () {
 };
 module.exports.getWaitingListCors = function () {
     return cors({
-        origin: /teleport\.so$/,
+        origin: process.env.CORS_WAITING_LIST ? process.env.CORS_WAITING_LIST : /teleport\.so$/,
         optionsSuccessStatus: 200
     });
 };

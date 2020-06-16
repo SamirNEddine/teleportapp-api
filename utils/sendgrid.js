@@ -17,6 +17,25 @@ module.exports.sendTemporaryAccessCode = async function (emailAddress, code) {
         console.error(err.toString());
     }
 };
+module.exports.sendPostWaitingListEmail = async function (emailAddress) {
+    const msg = {
+        to: emailAddress,
+        from: 'Teleport <no-reply@teleport.so>',
+        reply_to:'contact@teleport.so',
+        templateId: process.env.SENDGRID_WAITING_LIST_TEMPLATE_ID,
+        asm: {
+            group_id:parseInt(process.env.SENDGRID_WAITING_UNSUBSCRIBE_ID)
+        },
+        dynamic_template_data: {
+            email: emailAddress
+        },
+    };
+    try {
+        await sgMail.send(msg);
+    } catch (err) {
+        console.error(err.toString());
+    }
+};
 
 const client = require('@sendgrid/client');
 client.setApiKey(process.env.SENDGRID_API_KEY);
