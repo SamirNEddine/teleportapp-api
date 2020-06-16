@@ -1,5 +1,5 @@
 const express = require('express');
-const {addEmailToWaitingList} = require('../utils/sendgrid');
+const {addEmailToWaitingList, sendPostWaitingListEmail} = require('../utils/sendgrid');
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.post('/', async function (req, res) {
         if(!email) throw(new Error('No email found'));
         const result = await addEmailToWaitingList(email);
         if(result === 202){
+            await sendPostWaitingListEmail(email);
             res.send('ok');
         }else{
             res.status(400).send('Something went wrong!');
