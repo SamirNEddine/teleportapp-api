@@ -106,12 +106,10 @@ const UserSchema = Schema({
     firstName: {
         type: String,
         required: true,
-        min: 2
+        min: 1
     },
     lastName: {
-        type: String,
-        required: true,
-        min: 2
+        type: String
     },
     emailAddress: {
         type: String,
