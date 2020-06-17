@@ -29,6 +29,9 @@ module.exports.fetchUserInfoFromSlack = async function (integrationData) {
 
     const {real_name, email, title, image_512, image_original} = response.data.profile;
     const firstName = real_name.split(' ').slice(0, 1).join(' ');
-    const lastName = real_name.split(' ').slice(1).join(' ');
+    let lastName = real_name.split(' ').slice(1).join(' ');
+    if(!lastName){
+        lastName = '';
+    }
     return {firstName, lastName, emailAddress: email, jobTitle: title, profilePictureURL: (image_512 && image_512.length > 0) ? image_512 : image_original};
 };
