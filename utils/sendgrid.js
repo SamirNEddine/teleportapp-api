@@ -36,6 +36,25 @@ module.exports.sendPostWaitingListEmail = async function (emailAddress) {
         console.error(err.toString());
     }
 };
+module.exports.sendEmailsToRecipients = async function (templateId, recipients, templateData={}) {
+    await Promise.all( recipients.map(async (recipient) => {
+        const msg = {
+            to: recipient,
+            from: 'Teleport <no-reply@teleport.so>',
+            reply_to:'contact@teleport.so',
+            templateId: templateId,
+            asm: {
+                group_id:parseInt(process.env.SENDGRID_WAITING_UNSUBSCRIBE_ID)
+            },
+            dynamic_template_data: templateData
+        };
+        try {
+            await sgMail.send(msg);
+        } catch (err) {
+            console.error(err.toString());
+        }
+    }));
+};
 
 const client = require('@sendgrid/client');
 client.setApiKey(process.env.SENDGRID_API_KEY);
@@ -50,4 +69,17 @@ module.exports.addEmailToWaitingList = async function(email) {
     };
     const [response] = await client.request(request);
     return response.statusCode;
+};
+module.exports.getListRecipients = async function(listId) {
+    const request = {
+        method: 'POST',
+        url: `/v3/marketing/contacts/search`,
+        body:{
+            'query': `CONTAINS(list_ids, '${listId}')`
+        }
+    };
+    const [response] = await client.request(request);
+    return response.body.result.map( c => {
+        return c.email;
+    });
 };
