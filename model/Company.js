@@ -41,11 +41,12 @@ const SiteSchema = Schema({
         default: false
     },
     numberOfDesks: {
-        type: Number
+        type: Number,
+        default: 0
     },
     capacityRatioThreshold: {
         type: Number,
-        default: 0.3
+        default: 1.0
     },
     blockOnThresholdOrMax: {
         type: Boolean,

@@ -1,8 +1,11 @@
 const graphql = require('graphql');
 const {NonNull} = require('../../../utils/graphql');
 const {SkillType} = require('../../Skill');
-const {AvailabilityProfileType} = require('../../AvailabilityProfile');
 const {
+    nestedUserCompanyResolver,
+    nestedUserDepartmentResolver,
+    nestedUserSiteResolver,
+    nestedUserTeamResolver,
     nestedUserSkillsResolver,
     nestedTodayAvailabilityResolver,
     nestedSuggestedAvailabilityForTodayResolver,
@@ -21,6 +24,13 @@ const {
     GraphQLInt,
     GraphQLBoolean
 } = graphql;
+
+/** Nested types **/
+const {AvailabilityProfileType} = require('../../AvailabilityProfile');
+const { CompanyType } = require('../../Company');
+const { DepartmentType } = require('../../Department');
+const { SiteType } = require('../../Site');
+const { TeamType } = require('../../Team');
 
 /** Nested TimeSlot type **/
 const TimeSlotType = module.exports.TimeSlotType = new GraphQLObjectType({
@@ -99,6 +109,15 @@ const UserPreferencesType = module.exports.UserPreferencesType = new GraphQLObje
         },
         lunchDurationInMinutes: {
             type: NonNull(GraphQLInt)
+        },
+        numberOfDaysRemote: {
+            type: NonNull(GraphQLInt)
+        },
+        fixedDaysRemote: {
+            type: GraphQLList(GraphQLInt)
+        },
+        preferredDaysRemote: {
+            type: GraphQLList(GraphQLInt)
         }
     })
 });
@@ -125,6 +144,22 @@ module.exports.UserType = new GraphQLObjectType({
         },
         jobTitle: {
             type: GraphQLString
+        },
+        company: {
+            type: NonNull(CompanyType),
+            resolve: nestedUserCompanyResolver
+        },
+        site: {
+            type: SiteType,
+            resolve: nestedUserSiteResolver
+        },
+        department: {
+            type: DepartmentType,
+            resolve: nestedUserDepartmentResolver
+        },
+        team: {
+            type: TeamType,
+            resolve: nestedUserTeamResolver
         },
         skills: {
             type: GraphQLList(SkillType),
@@ -215,7 +250,10 @@ module.exports.inputFields = {
         endWorkTime: {type: GraphQLString},
         lunchTime: {type: GraphQLString},
         dailySetupTime: {type: GraphQLString},
-        lunchDurationInMinutes: {type: GraphQLInt}
+        lunchDurationInMinutes: {type: GraphQLInt},
+        numberOfDaysRemote: {type: GraphQLInt},
+        fixedDaysRemote: {type: GraphQLList(GraphQLInt)},
+        preferredDaysRemote: {type: GraphQLList(GraphQLInt)}
     },
     updateAvailabilityProfile: {
         availabilityProfileId: {type: GraphQLString},

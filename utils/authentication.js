@@ -53,19 +53,20 @@ module.exports.verifyTemporaryAccessCode = async function (emailAddress, code) {
 
 /** JWT Access Token **/
 class JWTUser {
-    constructor(userId, email){
+    constructor(userId, email, companyId=''){
         this.id = userId;
         this.email = email;
+        this.companyId=companyId;
     }
     static JWTUserFromPayload({user}){
-        return new JWTUser(user.id, user.email);
+        return new JWTUser(user.id, user.email, user.companyId);
     }
     toPlainObject(){
         return Object.assign({}, this);
     }
 }
 module.exports.JWTUser = JWTUser;
-module.exports.getJWTAccessTokenForUser = async function (userId, email) {
+module.exports.getJWTAccessTokenForUser = async function (userId, email, companyId) {
     const jwtUser = new JWTUser(userId, email);
     return jwt.sign({user: jwtUser.toPlainObject()}, process.env.JWT_ACCESS_TOKEN_SECRET, {expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION});
 };
