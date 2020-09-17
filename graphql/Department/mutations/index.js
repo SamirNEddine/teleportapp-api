@@ -7,7 +7,7 @@ const { authorizedResolver, AccessLevels } = require('../../../utils/authorizati
 const createDepartment = {
     type: DepartmentType,
     args: inputFields.createDepartment,
-    resolve: authenticatedResolver(authorizedResolver(createDepartmentResolver, AccessLevels.SUPER_ADMIN))
+    resolve: authenticatedResolver(authorizedResolver(createDepartmentResolver, AccessLevels.ADMIN))
 };
 
 /** Exports **/
