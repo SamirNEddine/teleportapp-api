@@ -98,7 +98,29 @@ const UserPreferences = Schema ({
         type: Number,
         get: getLunchDuration,
         set: setLunchDuration
+    },
+    numberOfDaysRemote: {
+        type: Number,
+        default: 2,
+        min: 0,
+        max: 7
+    },
+    //7 days in a week: Monday is 1, Sunday is 7
+    fixedDaysRemote: {
+        type: [{
+            type: Number,
+            min: 1,
+            max: 7
+        }]
+    },
+    preferredDaysRemote: {
+        type: [{
+            type: Number,
+            min: 1,
+            max: 7
+        }]
     }
+
 });
 UserPreferences.set('toObject', { getters: true });
 UserPreferences.set('toJSON', { getters: true });
@@ -125,6 +147,19 @@ const UserSchema = Schema({
     },
     jobTitle: {
         type: String
+    },
+    companyId: {
+        type: Schema.Types.ObjectID,
+        required: true
+    },
+    departmentId: {
+        type: Schema.Types.ObjectID
+    },
+    siteId: {
+        type: Schema.Types.ObjectID
+    },
+    teamId: {
+        type: Schema.Types.ObjectID
     },
     availabilityProfile: {
         type: Schema.Types.ObjectID,
