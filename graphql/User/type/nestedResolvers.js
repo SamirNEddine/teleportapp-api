@@ -1,4 +1,4 @@
-const Company = require('../..//model/Company');
+const Company = require('../../../model/Company');
 const Skill = require('../../../model/Skill');
 const AvailabilityProfile = require('../../../model/AvailabilityProfile');
 const {
