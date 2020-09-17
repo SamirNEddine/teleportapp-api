@@ -109,6 +109,15 @@ const UserPreferencesType = module.exports.UserPreferencesType = new GraphQLObje
         },
         lunchDurationInMinutes: {
             type: NonNull(GraphQLInt)
+        },
+        numberOfDaysRemote: {
+            type: NonNull(GraphQLInt)
+        },
+        fixedDaysRemote: {
+            type: GraphQLList(GraphQLInt)
+        },
+        preferredDaysRemote: {
+            type: GraphQLList(GraphQLInt)
         }
     })
 });
@@ -241,7 +250,10 @@ module.exports.inputFields = {
         endWorkTime: {type: GraphQLString},
         lunchTime: {type: GraphQLString},
         dailySetupTime: {type: GraphQLString},
-        lunchDurationInMinutes: {type: GraphQLInt}
+        lunchDurationInMinutes: {type: GraphQLInt},
+        numberOfDaysRemote: {type: GraphQLInt},
+        fixedDaysRemote: {type: GraphQLList(GraphQLInt)},
+        preferredDaysRemote: {type: GraphQLList(GraphQLInt)}
     },
     updateAvailabilityProfile: {
         availabilityProfileId: {type: GraphQLString},

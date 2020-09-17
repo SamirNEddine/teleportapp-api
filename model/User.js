@@ -101,7 +101,7 @@ const UserPreferences = Schema ({
     },
     numberOfDaysRemote: {
         type: Number,
-        default: 2,
+        default: 3,
         min: 0,
         max: 7
     },
