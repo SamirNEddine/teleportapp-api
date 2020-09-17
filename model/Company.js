@@ -39,6 +39,9 @@ const SiteSchema = Schema({
     isHeadquarter: {
         type: Boolean,
         default: false
+    },
+    numberOfDesks: {
+        type: Number
     }
 }, {timestamp: true});
 
