@@ -5,7 +5,9 @@ const {
     GraphQLObjectType,
     GraphQLID,
     GraphQLString,
-    GraphQLBoolean
+    GraphQLBoolean,
+    GraphQLInt,
+    GraphQLFloat
 } = graphql;
 
 /** Nested Address type **/
@@ -43,6 +45,15 @@ module.exports.SiteType = new GraphQLObjectType({
         },
         isHeadquarter:{
             type: NonNull(GraphQLBoolean)
+        },
+        numberOfDesks: {
+            type: GraphQLInt
+        },
+        capacityRatioThreshold: {
+            type: NonNull(GraphQLFloat)
+        },
+        blockOnThresholdOrMax: {
+            type: NonNull(GraphQLBoolean)
         }
     })
 });
@@ -60,6 +71,9 @@ module.exports.inputFields = {
         city: {type: NonNull(GraphQLString)},
         country: {type: NonNull(GraphQLString)},
         isHeadquarter: {type: GraphQLBoolean},
-        companyId: {type: GraphQLID}
+        companyId: {type: GraphQLID},
+        numberOfDesks: {type: GraphQLInt},
+        capacityRatioThreshold: {type: GraphQLFloat},
+        blockOnThresholdOrMax: {type: GraphQLBoolean}
     }
 };
